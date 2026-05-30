@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOODFUEL — Feed Your Feelings</title>
+  <meta name="description" content="The first nutrition platform built around your emotional chemistry. Tell us how you feel. We prescribe what your brain needs — backed by neuroscience." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ==========================================
+       ROOT DESIGN TOKENS
+    ========================================== */
+    :root {
+      --bg:          #05050f;
+      --bg-2:        #0a0a1a;
+      --bg-3:        #0f0f24;
+      --primary:     #00ffb2;
+      --primary-dim: rgba(0,255,178,0.12);
+      --secondary:   #ff4d6d;
+      --accent:      #ffd60a;
+      --blue:        #00b8ff;
+      --purple:      #c084fc;
+      --text:        #eaeaf5;
+      --text-2:      #b0b0cc;
+      --text-muted:  #6868a0;
+      --card:        rgba(255,255,255,0.025);
+      --card-border: rgba(255,255,255,0.065);
+      --ff-display:  'Cormorant Garamond', Georgia, serif;
+      --ff-body:     'Outfit', system-ui, sans-serif;
+      --ff-mono:     'JetBrains Mono', 'Courier New', monospace;
+      --radius:      4px;
+      --ease-out:    cubic-bezier(0.16,1,0.3,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--ff-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    }
+
+    /* ==========================================
+       TYPOGRAPHY UTILITIES
+    ========================================== */
+    .display { font-family: var(--ff-display); }
+    .mono    { font-family: var(--ff-mono); }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--blue) 55%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 1.1rem;
+    }
+
+    .section-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.08;
+      margin-bottom: 1.4rem;
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--text-2);
+      line-height: 1.75;
+      font-weight: 300;
+      max-width: 560px;
+    }
+
+    /* ==========================================
+       LAYOUT
+    ========================================== */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section { padding: 7rem 2rem; }
+
+    /* ==========================================
+       NAVIGATION
+    ========================================== */
+    nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      padding: 1.4rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(5,5,15,0.7);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: padding 0.3s var(--ease-out);
+    }
+
+    .nav-logo {
+      font-family: var(--ff-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      background: linear-gradient(120deg, var(--primary), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-logo em {
+      font-style: normal;
+      -webkit-text-fill-color: var(--secondary);
+      background: none;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-menu a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.25s;
+    }
+
+    .nav-menu a:hover { color: var(--primary); }
+
+    .nav-pill {
+      border: 1px solid var(--primary) !important;
+      color: var(--primary) !important;
+      padding: 0.5rem 1.4rem;
+      border-radius: 2px;
+      font-size: 0.76rem !important;
+      transition: all 0.25s !important;
+    }
+
+    .nav-pill:hover {
+      background: var(--primary) !important;
+      color: var(--bg) !important;
+    }
+
+    /* ==========================================
+       HERO
+    ========================================== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 7rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ambient orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    .orb-a {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, var(--primary), transparent 70%);
+      top: -20%; left: -15%;
+      opacity: 0.07;
+      animation: drift 22s ease-in-out infinite;
+    }
+
+    .orb-b {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, var(--secondary), transparent 70%);
+      bottom: -10%; right: -10%;
+      opacity: 0.07;
+      animation: drift 16s ease-in-out infinite reverse;
+    }
+
+    .orb-c {
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, var(--accent), transparent 70%);
+      top: 40%; left: 55%;
+      opacity: 0.045;
+      animation: drift 28s ease-in-out infinite 4s;
+    }
+
+    @keyframes drift {
+      0%,100% { transform: translate(0, 0) scale(1); }
+      25%      { transform: translate(35px,-25px) scale(1.04); }
+      50%      { transform: translate(-20px, 45px) scale(0.96); }
+      75%      { transform: translate(15px, 20px) scale(1.02); }
+    }
+
+    /* Grid overlay */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,255,178,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,178,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 880px;
+      padding: 0 1rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: rgba(0,255,178,0.05);
+      border: 1px solid rgba(0,255,178,0.25);
+      color: var(--primary);
+      padding: 0.38rem 1.2rem;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-family: var(--ff-mono);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2.2rem;
+      animation: fadeUp 0.8s var(--ease-out) both;
+    }
+
+    .badge-pulse {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: pulseGlow 2.2s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,255,178,0.6); }
+      50%      { opacity: 0.6; box-shadow: 0 0 0 5px rgba(0,255,178,0); }
+    }
+
+    .hero-headline {
+      font-family: var(--ff-display);
+      font-size: clamp(4.5rem, 12vw, 10rem);
+      font-weight: 700;
+      line-height: 0.92;
+      margin-bottom: 1.8rem;
+      animation: fadeUp 0.8s var(--ease-out) 0.1s both;
+    }
+
+    .hero-headline .l1 { display: block; color: var(--text); }
+    .hero-headline .l2 {
+      display: block;
+      font-style: italic;
+      background: linear-gradient(120deg, var(--primary) 0%, var(--blue) 50%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem;
+      font-weight: 300;
+      color: var(--text-2);
+      max-width: 580px;
+      margin: 0 auto 3rem;
+      line-height: 1.72;
+      animation: fadeUp 0.8s var(--ease-out) 0.2s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s var(--ease-out) 0.3s both;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--ff-body);
+      font-weight: 600;
+      font-size: 0.86rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius);
+      padding: 1rem 2.2rem;
+      transition: all 0.3s var(--ease-out);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .btn:hover::after { opacity: 0.07; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--blue));
+      color: var(--bg);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0,255,178,0.22);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* Hero stats strip */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 4.5rem;
+      margin-top: 5.5rem;
+      padding-top: 3.5rem;
+      border-top: 1px solid var(--card-border);
+      animation: fadeUp 0.8s var(--ease-out) 0.45s both;
+      flex-wrap: wrap;
+    }
+
+    .stat-num {
+      font-family: var(--ff-display);
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.3rem;
+      background: linear-gradient(135deg, var(--primary), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      font-family: var(--ff-mono);
+      color: var(--text-muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================
+       MARQUEE
+    ========================================== */
+    .marquee-wrap {
+      overflow: hidden;
+      border-top: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+      padding: 1.6rem 0;
+      background: var(--bg-2);
+    }
+
+    .marquee-inner {
+      display: flex;
+      gap: 3.5rem;
+      width: max-content;
+      animation: scroll 28s linear infinite;
+    }
+
+    .marquee-item {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-family: var(--ff-display);
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .marquee-item::after {
+      content: '✦';
+      font-style: normal;
+      font-size: 0.65rem;
+      color: var(--primary);
+      opacity: 0.7;
+    }
+
+    @keyframes scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ==========================================
+       HOW IT WORKS
+    ========================================== */
+    .hiw { background: var(--bg-2); position: relative; }
+
+    .hiw::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--primary) 50%, transparent 100%);
+      opacity: 0.25;
+    }
+
+    .hiw-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+
+    .hiw-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 2.4rem 2rem;
+      transition: all 0.4s var(--ease-out);
+      position: relative;
+    }
+
+    .hiw-card:hover {
+      border-color: rgba(0,255,178,0.18);
+      transform: translateY(-5px);
+      background: rgba(0,255,178,0.02);
+    }
+
+    .step-tag {
+      font-family: var(--ff-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--primary);
+      opacity: 0.7;
+      margin-bottom: 1.4rem;
+    }
+
+    .step-icon {
+      font-size: 2.6rem;
+      display: block;
+      margin-bottom: 1.4rem;
+    }
+
+    .step-title {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    .step-text {
+      font-size: 0.88rem;
+      color: var(--text-2);
+      line-height: 1.72;
+      font-weight: 300;
+    }
+
+    /* ==========================================
+       THE RX ENGINE
+    ========================================== */
+    .engine { position: relative; }
+
+    .engine-head {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: end;
+      margin-bottom: 3.5rem;
+    }
+
+    .engine-note {
+      font-size: 0.9rem;
+      color: var(--text-2);
+      line-height: 1.75;
+      font-weight: 300;
+    }
+
+    /* Mood cards */
+    .step-label {
+      font-family: var(--ff-mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.1rem;
+      padding-left: 2px;
+    }
+
+    .mood-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .mood-card {
+      --mc: var(--primary);
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.6rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.28s var(--ease-out);
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .mood-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--mc);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .mood-card:hover { border-color: var(--mc); transform: translateY(-3px); }
+    .mood-card:hover::before { opacity: 0.06; }
+    .mood-card.active { border-color: var(--mc); box-shadow: 0 0 0 1px var(--mc), 0 8px 24px rgba(0,0,0,0.3); }
+    .mood-card.active::before { opacity: 0.10; }
+
+    .mood-check {
+      position: absolute;
+      top: 0.5rem; right: 0.6rem;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--mc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: var(--bg);
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.25s var(--ease-out);
+    }
+
+    .mood-card.active .mood-check { opacity: 1; transform: scale(1); }
+
+    .mood-emoji { font-size: 2.2rem; display: block; margin-bottom: 0.65rem; position: relative; z-index: 1; }
+    .mood-name  { font-size: 0.8rem; font-weight: 600; margin-bottom: 0.3rem; position: relative; z-index: 1; }
+    .mood-chem  { font-family: var(--ff-mono); font-size: 0.58rem; color: var(--text-muted); position: relative; z-index: 1; }
+
+    /* Tags */
+    .tags-group { margin-bottom: 2rem; }
+
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .tag-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-family: var(--ff-body);
+      cursor: pointer;
+      transition: all 0.22s;
+    }
+
+    .tag-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    .tag-btn.active {
+      background: rgba(0,255,178,0.1);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .tag-btn.goal-btn.active {
+      background: rgba(0,184,255,0.1);
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    /* Generate CTA */
+    .gen-area {
+      text-align: center;
+      padding: 1.5rem 0 0.5rem;
+    }
+
+    .btn-gen {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--blue) 100%);
+      color: var(--bg);
+      font-family: var(--ff-body);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 1.15rem 3.5rem;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.35s var(--ease-out);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-gen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--accent) 100%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .btn-gen > * { position: relative; z-index: 1; }
+    .btn-gen:hover::before { opacity: 1; }
+    .btn-gen:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,255,178,0.22); }
+    .btn-gen:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+    .error-note {
+      display: none;
+      margin-top: 0.8rem;
+      font-size: 0.82rem;
+      color: var(--secondary);
+    }
+
+    /* ==========================================
+       PRESCRIPTION CARD
+    ========================================== */
+    .rx-output {
+      display: none;
+      margin-top: 3rem;
+    }
+
+    .rx-output.show {
+      display: block;
+      animation: fadeUp 0.6s var(--ease-out) both;
+    }
+
+    .rx-card {
+      background: rgba(0,255,178,0.018);
+      border: 1px solid rgba(0,255,178,0.14);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Top accent line */
+    .rx-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--blue), var(--accent));
+    }
+
+    /* CRT scanlines */
+    .rx-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0,255,178,0.006) 3px,
+        rgba(0,255,178,0.006) 6px
+      );
+      pointer-events: none;
+    }
+
+    .rx-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 2rem 2.5rem 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .rx-brand {
+      font-family: var(--ff-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 0.05em;
+    }
+
+    .rx-brand span {
+      font-size: 0.75rem;
+      font-family: var(--ff-mono);
+      font-weight: 400;
+      display: block;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      margin-top: 0.1rem;
+    }
+
+    .rx-meta {
+      font-family: var(--ff-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-align: right;
+      line-height: 1.9;
+    }
+
+    .rx-body {
+      padding: 2rem 2.5rem 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Loading state */
+    .rx-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 3rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: bounce 0.9s ease-in-out infinite;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.18s; }
+    .dot:nth-child(3) { animation-delay: 0.36s; }
+
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); opacity: 0.4; }
+      50%      { transform: translateY(-10px); opacity: 1; }
+    }
+
+    /* Prescription content blocks */
+    .rx-block { margin-bottom: 1.8rem; }
+    .rx-block:last-child { margin-bottom: 0; }
+
+    .rx-block-title {
+      font-family: var(--ff-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 0.7rem;
+      opacity: 0.85;
+    }
+
+    .rx-block-text {
+      font-size: 0.92rem;
+      color: var(--text-2);
+      line-height: 1.75;
+      font-weight: 300;
+    }
+
+    .rx-block-text strong { color: var(--text); font-weight: 500; }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.2rem;
+    }
+
+    .pill {
+      background: rgba(0,255,178,0.09);
+      border: 1px solid rgba(0,255,178,0.22);
+      color: var(--primary);
+      padding: 0.3rem 0.9rem;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 500;
+    }
+
+    .pill.avoid {
+      background: rgba(255,77,109,0.08);
+      border-color: rgba(255,77,109,0.2);
+      color: var(--secondary);
+    }
+
+    .rx-recipe {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-left: 3px solid var(--accent);
+      border-radius: 3px;
+      padding: 1.2rem 1.5rem;
+    }
+
+    .rx-recipe-name {
+      font-family: var(--ff-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: var(--accent);
+    }
+
+    .rx-note {
+      background: rgba(0,255,178,0.04);
+      border: 1px dashed rgba(0,255,178,0.2);
+      border-radius: 3px;
+      padding: 1.3rem 1.5rem;
+      font-style: italic;
+      font-size: 0.92rem;
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    .rx-neuro-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0,184,255,0.08);
+      border: 1px solid rgba(0,184,255,0.25);
+      color: var(--blue);
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-family: var(--ff-mono);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    /* Grid for rx content */
+    .rx-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.8rem;
+    }
+
+    /* ==========================================
+       FALLBACK DISPLAY
+    ========================================== */
+    .fallback-rx { line-height: 1.8; }
+
+    /* ==========================================
+       SCIENCE SECTION
+    ========================================== */
+    .science { background: var(--bg-2); position: relative; overflow: hidden; }
+
+    .neuro-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 1.4rem;
+      margin-top: 4rem;
+    }
+
+    .neuro-card {
+      --nc: var(--primary);
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-left: 3px solid var(--nc);
+      border-radius: var(--radius);
+      padding: 2.2rem;
+      transition: all 0.35s var(--ease-out);
+    }
+
+    .neuro-card:hover {
+      transform: translateX(5px);
+      border-color: rgba(255,255,255,0.1);
+      border-left-color: var(--nc);
+    }
+
+    .neuro-label {
+      font-family: var(--ff-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--nc);
+      margin-bottom: 0.5rem;
+    }
+
+    .neuro-name {
+      font-family: var(--ff-display);
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-bottom: 0.9rem;
+    }
+
+    .neuro-desc {
+      font-size: 0.87rem;
+      color: var(--text-2);
+      line-height: 1.72;
+      margin-bottom: 1.4rem;
+      font-weight: 300;
+    }
+
+    .neuro-foods {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .neuro-food {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--card-border);
+      padding: 0.28rem 0.75rem;
+      border-radius: 2px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================
+       SOCIAL PROOF
+    ========================================== */
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1.4rem;
+      margin-top: 4rem;
+    }
+
+    .proof-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: border-color 0.3s;
+    }
+
+    .proof-card:hover { border-color: rgba(255,255,255,0.12); }
+
+    .stars {
+      color: var(--accent);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .proof-q {
+      font-family: var(--ff-display);
+      font-size: 1.08rem;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.62;
+      margin-bottom: 1.4rem;
+    }
+
+    .proof-person {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .proof-name  { font-size: 0.84rem; font-weight: 600; }
+    .proof-title { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+    /* ==========================================
+       FINAL CTA STRIP
+    ========================================== */
+    .cta-strip {
+      background: var(--bg-2);
+      border-top: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+      padding: 6rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-strip::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 600px; height: 600px;
+      transform: translate(-50%,-50%);
+      background: radial-gradient(circle, rgba(0,255,178,0.06), transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1.4rem;
+    }
+
+    .cta-sub {
+      font-size: 1rem;
+      color: var(--text-2);
+      max-width: 500px;
+      margin: 0 auto 2.5rem;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* ==========================================
+       FOOTER
+    ========================================== */
+    footer {
+      padding: 3rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .footer-brand {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(120deg, var(--primary), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--primary); }
+
+    /* ==========================================
+       SCROLL REVEAL
+    ========================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ==========================================
+       RESPONSIVE
+    ========================================== */
+    @media (max-width: 900px) {
+      .mood-grid { grid-template-columns: repeat(2,1fr); }
+      .hiw-grid  { grid-template-columns: 1fr; }
+      .neuro-grid { grid-template-columns: 1fr; }
+      .proof-grid { grid-template-columns: 1fr; }
+      .rx-grid    { grid-template-columns: 1fr; }
+      .engine-head { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      nav { padding: 1rem 1.4rem; }
+      .nav-menu { display: none; }
+      section { padding: 5rem 1.4rem; }
+      .hero { padding-top: 6rem; }
+      .hero-stats { gap: 2rem; }
+      .stat-num { font-size: 2.2rem; }
+      footer { flex-direction: column; text-align: center; }
+      .rx-top { flex-direction: column; gap: 0.8rem; }
+      .rx-meta { text-align: left; }
+      .rx-body { padding: 1.5rem; }
+    }
+
+    /* ==========================================
+       MISC
+    ========================================== */
+    hr.section-rule {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--card-border), transparent);
+      margin: 0;
+    }
+
+    .badge-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--ff-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(255,214,10,0.06);
+      border: 1px solid rgba(255,214,10,0.2);
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ========== NAVIGATION ========== -->
+<nav>
+  <a href="#" class="nav-logo">MOOD<em>FUEL</em></a>
+  <ul class="nav-menu">
+    <li><a href="#how-it-works">Method</a></li>
+    <li><a href="#engine">Rx Engine</a></li>
+    <li><a href="#science">Science</a></li>
+    <li><a href="#engine" class="nav-pill">Get My Rx</a></li>
+  </ul>
+</nav>
+
+<!-- ========== HERO ========== -->
+<header class="hero">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="badge-pulse"></div>
+      Psychonutrition Platform · Neuroscience-Backed
+    </div>
+
+    <h1 class="hero-headline">
+      <span class="l1">Feed Your</span>
+      <span class="l2">Feelings.</span>
+    </h1>
+
+    <p class="hero-sub">
+      Your mood is a nutritional signal. Tell us how you feel — we decode your neurochemistry and prescribe the exact foods your brain needs to rebalance.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#engine" class="btn btn-primary">
+        Decode My Mood <span>→</span>
+      </a>
+      <a href="#science" class="btn btn-outline">
+        The Science
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">200+</div>
+        <div class="stat-label">Mood-Mapped Foods</div>
+      </div>
+      <div>
+        <div class="stat-num">38</div>
+        <div class="stat-label">Neuro Pathways</div>
+      </div>
+      <div>
+        <div class="stat-num">94%</div>
+        <div class="stat-label">Report Improvement</div>
+      </div>
+      <div>
+        <div class="stat-num">8</div>
+        <div class="stat-label">Emotional States</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== MARQUEE ========== -->
+<div class="marquee-wrap">
+  <div class="marquee-inner" id="marqueeEl">
+    <span class="marquee-item">Serotonin & Tryptophan</span>
+    <span class="marquee-item">Dopamine & Tyrosine</span>
+    <span class="marquee-item">Cortisol & Adaptogens</span>
+    <span class="marquee-item">GABA & Magnesium</span>
+    <span class="marquee-item">Gut-Brain Axis</span>
+    <span class="marquee-item">Omega-3 & Cognition</span>
+    <span class="marquee-item">Neuroinflammation & Diet</span>
+    <span class="marquee-item">Glycemic Index & Mood</span>
+    <span class="marquee-item">Serotonin & Tryptophan</span>
+    <span class="marquee-item">Dopamine & Tyrosine</span>
+    <span class="marquee-item">Cortisol & Adaptogens</span>
+    <span class="marquee-item">GABA & Magnesium</span>
+    <span class="marquee-item">Gut-Brain Axis</span>
+    <span class="marquee-item">Omega-3 & Cognition</span>
+    <span class="marquee-item">Neuroinflammation & Diet</span>
+    <span class="marquee-item">Glycemic Index & Mood</span>
+  </div>
+</div>
+
+<!-- ========== HOW IT WORKS ========== -->
+<section class="hiw" id="how-it-works">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">The Method</p>
+      <h2 class="section-title">Your body is<br><em>always signaling.</em></h2>
+      <p class="section-sub">Most nutrition platforms ignore the single biggest factor affecting what you eat: how you feel. MOODFUEL maps the emotional-neurochemical connection that changes everything.</p>
+    </div>
+
+    <div class="hiw-grid">
+      <div class="hiw-card reveal reveal-delay-1">
+        <div class="step-tag">01 · Identify</div>
+        <span class="step-icon">🧠</span>
+        <h3 class="step-title">Scan Your Emotional State</h3>
+        <p class="step-text">Select your current mood from our 8-state emotional matrix. Each mood corresponds to a distinct neurochemical signature — a precise pattern of dopamine, serotonin, cortisol, and GABA activity.</p>
+      </div>
+      <div class="hiw-card reveal reveal-delay-2">
+        <div class="step-tag">02 · Analyze</div>
+        <span class="step-icon">⚗️</span>
+        <h3 class="step-title">AI Maps Your Chemistry</h3>
+        <p class="step-text">Our AI cross-references your emotional state with 200+ peer-reviewed nutrition-neuroscience studies, identifying which specific nutrients your brain is currently depleted of — and why.</p>
+      </div>
+      <div class="hiw-card reveal reveal-delay-3">
+        <div class="step-tag">03 · Prescribe</div>
+        <span class="step-icon">📋</span>
+        <h3 class="step-title">Receive Your Nutritional Rx</h3>
+        <p class="step-text">Get a real prescription: exact power foods, what to avoid and why, a fast recipe, the biochemical mechanism behind it, and an optimal eating window — all personalized to your exact mood state.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule" />
+
+<!-- ========== THE RX ENGINE ========== -->
+<section class="engine" id="engine">
+  <div class="container">
+
+    <div class="engine-head reveal">
+      <div>
+        <p class="section-eyebrow">The Rx Engine</p>
+        <h2 class="section-title">How are you<br><em>feeling right now?</em></h2>
+      </div>
+      <p class="engine-note">Select your mood state, tag any symptoms you're experiencing, and choose your goal. We'll generate a personalized, science-backed nutritional prescription in seconds.</p>
+    </div>
+
+    <!-- STEP 1: MOOD -->
+    <div class="reveal">
+      <p class="step-label">Step 01 — Select Your Current Mood</p>
+      <div class="mood-grid" id="moodGrid">
+
+        <div class="mood-card" data-mood="Low / Sad" style="--mc:#6B7AFF;" onclick="pickMood(this)">
+          <div class="mood-check">✓</div>
+          <span class="mood-emoji">🌧️</span>
+          <div class="mood-name">Low / Sad</div>
+          <div class="mood-chem">↓ Serotonin</div>
+        </div>
+
+        <div class="mood-card" data-mood="Stressed / Anxious" style="--mc:#FF6B6B;" onclick="pickMood(this)">
+          <div class="mood-check">✓</div>
+          <span class="mood-emoji">⚡</span>
+          <div class="mood-name">Stressed / Anxious</div>
+          <div class="mood-chem">↑ Cortisol</div>
+        </div>
+
+        <div class="mood-card" data-mood="Tired / Brain Fog" style="--mc:#A0ADC0;" onclick="pickMood(this)">
+          <div class="mood-check">✓</div>
+          <span class="mood-emoji">🌫️</span>
+          <div class="mood-name">Tired / Brain Fog</div>
+          <div class="mood-chem">↓ Dopamine · ↓ ATP</div>
+        </div>
+
+        <div class="mood-card" data-mood="Frustrated / Angry" style="--mc:#FF8C42;" onclick="pickMood(this)">
+          <div class="mood-check">✓</div>
+          <span class="mood-emoji">🔥</span>
+          <div class="mood-name">Frustrated</div>
+          <div class="mood-chem">↑ Adrenaline</div>
+        </div>
+
+        <div class="mood-card" data-mood="Calm and Balanced" style="--mc:#52D98C;" onclick="pickMood(this)">
+          <div class="mood-check">✓</div>
+          <span class="mood-emoji">🌿</span>
+          <div class="mood-name">Calm & Balanced</div>
+          <div class="mood-chem">↑ GABA · Maintain</div>
+        </div>
+
+        <div class="mood-card" data-mood="Happy / Upbeat" style="--mc:#FFD60A;" onclick="pickMood(this)">
+          <div class="mood-check">✓</div>
+          <span class="mood-emoji">✨</span>
+          <div class="mood-name">Happy / Upbeat</div>
+          <div class="mood-chem">↑ Dopamine · Amplify</div>
+        </div>
+
+        <div class="mood-card" data-mood="Overwhelmed / Scattered" style="--mc:#C084FC;" onclick="pickMood(this)">
+          <div class="mood-check">✓</div>
+          <span class="mood-emoji">🌀</span>
+          <div class="mood-name">Overwhelmed</div>
+          <div class="mood-chem">↑ Cortisol · ↓ Focus</div>
+        </div>
+
+        <div class="mood-card" data-mood="Motivated / Ready to Perform" style="--mc:#00E5FF;" onclick="pickMood(this)">
+          <div class="mood-check">✓</div>
+          <span class="mood-emoji">🎯</span>
+          <div class="mood-name">Motivated / Ready</div>
+          <div class="mood-chem">Optimize Performance</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- STEP 2: SYMPTOMS -->
+    <div class="tags-group reveal">
+      <p class="step-label">Step 02 — Tag Any Symptoms (Optional)</p>
+      <div class="tags-row">
+        <button class="tag-btn" onclick="toggleSymptom(this)">Brain Fog</button>
+        <button class="tag-btn" onclick="toggleSymptom(this)">Energy Crash</button>
+        <button class="tag-btn" onclick="toggleSymptom(this)">Poor Sleep</button>
+        <button class="tag-btn" onclick="toggleSymptom(this)">Bloating</button>
+        <button class="tag-btn" onclick="toggleSymptom(this)">Headache</button>
+        <button class="tag-btn" onclick="toggleSymptom(this)">Mood Swings</button>
+        <button class="tag-btn" onclick="toggleSymptom(this)">Sugar Cravings</button>
+        <button class="tag-btn" onclick="toggleSymptom(this)">Low Motivation</button>
+        <button class="tag-btn" onclick="toggleSymptom(this)">Irritability</button>
+        <button class="tag-btn" onclick="toggleSymptom(this)">Muscle Tension</button>
+        <button class="tag-btn" onclick="toggleSymptom(this)">Digestive Issues</button>
+        <button class="tag-btn" onclick="toggleSymptom(this)">Racing Thoughts</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: GOAL -->
+    <div class="tags-group reveal">
+      <p class="step-label">Step 03 — What's Your Goal?</p>
+      <div class="tags-row" id="goalRow">
+        <button class="tag-btn goal-btn" onclick="pickGoal(this)">Feel Better Fast</button>
+        <button class="tag-btn goal-btn" onclick="pickGoal(this)">Sustained Energy</button>
+        <button class="tag-btn goal-btn" onclick="pickGoal(this)">Mental Clarity</button>
+        <button class="tag-btn goal-btn" onclick="pickGoal(this)">Emotional Balance</button>
+        <button class="tag-btn goal-btn" onclick="pickGoal(this)">Better Sleep Tonight</button>
+        <button class="tag-btn goal-btn" onclick="pickGoal(this)">Reduce Stress</button>
+        <button class="tag-btn goal-btn" onclick="pickGoal(this)">Peak Performance</button>
+      </div>
+    </div>
+
+    <!-- GENERATE -->
+    <div class="gen-area reveal">
+      <button class="btn-gen" id="genBtn" onclick="generateRx()">
+        <span>⚗️</span>
+        <span>Generate My Nutritional Rx</span>
+        <span>→</span>
+      </button>
+      <p class="error-note" id="errNote">Please select a mood to continue.</p>
+    </div>
+
+    <!-- PRESCRIPTION OUTPUT -->
+    <div class="rx-output" id="rxOutput">
+      <div class="rx-card">
+        <div class="rx-top">
+          <div class="rx-brand">
+            MoodFuel Rx™
+            <span>PERSONALIZED NUTRITIONAL PRESCRIPTION</span>
+          </div>
+          <div class="rx-meta" id="rxMeta">
+            PRESCRIPTION ID: —<br>
+            DATE ISSUED: —<br>
+            MOOD STATE: —<br>
+            POWERED BY AI
+          </div>
+        </div>
+        <div class="rx-body" id="rxBody">
+          <div class="rx-loading">
+            <div class="dots">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+            <span>Analyzing your neurochemistry...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-rule" />
+
+<!-- ========== SCIENCE ========== -->
+<section class="science" id="science">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">The Neuroscience</p>
+      <h2 class="section-title">Your brain runs on<br><em>nutrients, not willpower.</em></h2>
+      <p class="section-sub">Every neurotransmitter is synthesized from dietary precursors. Understanding these four pathways rewires how you think about food — forever.</p>
+    </div>
+
+    <div class="neuro-grid">
+      <div class="neuro-card reveal reveal-delay-1" style="--nc:#6B7AFF;">
+        <div class="neuro-label">Neurotransmitter 01</div>
+        <div class="neuro-name">Serotonin</div>
+        <p class="neuro-desc">Your "wellbeing" molecule. 90% is produced in the gut, not the brain — through the enteric nervous system. Low serotonin drives sadness, anxiety, and compulsive eating. Its dietary precursor is tryptophan, which crosses the blood-brain barrier with the help of complex carbohydrates.</p>
+        <div class="neuro-foods">
+          <span class="neuro-food">Turkey</span>
+          <span class="neuro-food">Eggs</span>
+          <span class="neuro-food">Oats</span>
+          <span class="neuro-food">Pumpkin Seeds</span>
+          <span class="neuro-food">Fermented Kefir</span>
+          <span class="neuro-food">Dark Chocolate</span>
+        </div>
+      </div>
+
+      <div class="neuro-card reveal reveal-delay-2" style="--nc:#FFD60A;">
+        <div class="neuro-label">Neurotransmitter 02</div>
+        <div class="neuro-name">Dopamine</div>
+        <p class="neuro-desc">Your "motivation and reward" molecule. Drives focus, pleasure, ambition, and follow-through. Built from the amino acid tyrosine. When depleted: brain fog, procrastination, and emotional eating for rapid dopamine "hits." Chronically low dopamine is linked to ADHD and depression.</p>
+        <div class="neuro-foods">
+          <span class="neuro-food">Avocado</span>
+          <span class="neuro-food">Almonds</span>
+          <span class="neuro-food">Beets</span>
+          <span class="neuro-food">Bananas</span>
+          <span class="neuro-food">Green Tea (L-theanine)</span>
+          <span class="neuro-food">Wild Salmon</span>
+        </div>
+      </div>
+
+      <div class="neuro-card reveal reveal-delay-1" style="--nc:#FF6B6B;">
+        <div class="neuro-label">Stress Hormone</div>
+        <div class="neuro-name">Cortisol</div>
+        <p class="neuro-desc">The primary stress hormone produced by your adrenal glands. Chronically elevated cortisol destroys gut microbiome diversity, depletes magnesium reserves, raises blood sugar, and drives intense cravings for high-fat, high-sugar comfort foods — creating a self-reinforcing stress-eating cycle.</p>
+        <div class="neuro-foods">
+          <span class="neuro-food">Ashwagandha</span>
+          <span class="neuro-food">Dark Leafy Greens</span>
+          <span class="neuro-food">Blueberries</span>
+          <span class="neuro-food">Chamomile Tea</span>
+          <span class="neuro-food">Magnesium-rich Seeds</span>
+          <span class="neuro-food">Omega-3 Fish</span>
+        </div>
+      </div>
+
+      <div class="neuro-card reveal reveal-delay-2" style="--nc:#52D98C;">
+        <div class="neuro-label">Inhibitory Neurotransmitter</div>
+        <div class="neuro-name">GABA</div>
+        <p class="neuro-desc">Your brain's primary "calm and inhibit" signal. GABA quiets overactive neurons, reduces anxiety, and allows the nervous system to downregulate after stress. Low GABA produces racing thoughts, inability to relax, and chronic tension. Magnesium, fermented foods, and specific amino acids directly support GABA production.</p>
+        <div class="neuro-foods">
+          <span class="neuro-food">Fermented Vegetables</span>
+          <span class="neuro-food">Spinach</span>
+          <span class="neuro-food">Lentils</span>
+          <span class="neuro-food">Sweet Potato</span>
+          <span class="neuro-food">Walnuts</span>
+          <span class="neuro-food">Kefir</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule" />
+
+<!-- ========== SOCIAL PROOF ========== -->
+<section id="proof">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">Real Results</p>
+      <h2 class="section-title">What people are<br><em>saying.</em></h2>
+    </div>
+
+    <div class="proof-grid">
+      <div class="proof-card reveal reveal-delay-1">
+        <div class="stars">★★★★★</div>
+        <p class="proof-q">"I thought I had no willpower around food. Turns out I had chronically low serotonin. Three foods changed everything within two days. I've never felt this informed about my own body."</p>
+        <div class="proof-person">
+          <div class="avatar">🌿</div>
+          <div>
+            <div class="proof-name">Sarah K.</div>
+            <div class="proof-title">Wellness Coach, Austin TX</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="proof-card reveal reveal-delay-2">
+        <div class="stars">★★★★★</div>
+        <p class="proof-q">"As a registered dietitian, I was skeptical. But the neuroscience here is genuinely grounded. I now recommend MoodFuel to clients stuck in stress-eating cycles. The mood-to-nutrient mapping is accurate."</p>
+        <div class="proof-person">
+          <div class="avatar">⚗️</div>
+          <div>
+            <div class="proof-name">Dr. Marcus R.</div>
+            <div class="proof-title">Registered Dietitian, NYC</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="proof-card reveal reveal-delay-3">
+        <div class="stars">★★★★★</div>
+        <p class="proof-q">"My 3pm energy crashes were killing my productivity. One week of following my MoodFuel prescription and I don't even recognize my afternoons. No more wall. Just energy. The avoidance list was the real unlock."</p>
+        <div class="proof-person">
+          <div class="avatar">🎯</div>
+          <div>
+            <div class="proof-name">Jake T.</div>
+            <div class="proof-title">Startup Founder, San Francisco</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FINAL CTA ========== -->
+<div class="cta-strip">
+  <div style="position:relative;z-index:1;">
+    <p class="section-eyebrow" style="justify-content:center;display:flex;">Ready?</p>
+    <h2 class="cta-title">
+      Stop guessing.<br>
+      <em class="gradient-text">Start prescribing.</em>
+    </h2>
+    <p class="cta-sub">Your emotions are a nutritional compass. Let's decode them — and feed your brain exactly what it's been asking for.</p>
+    <a href="#engine" class="btn btn-primary" style="font-size:1rem; padding:1.2rem 3rem;">
+      Get My Free Prescription &nbsp;→
+    </a>
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="footer-brand">MOODFUEL™</div>
+  <p class="footer-copy">© 2025 MoodFuel · Nutrition is information. Feed wisely.</p>
+  <ul class="footer-links">
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Terms</a></li>
+    <li><a href="#science">Science</a></li>
+    <li><a href="#engine">Get Rx</a></li>
+  </ul>
+</footer>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+  /* ============================
+     STATE
+  ============================ */
+  let selectedMood     = null;
+  let selectedSymptoms = [];
+  let selectedGoal     = null;
+
+  /* ============================
+     MOOD SELECTION
+  ============================ */
+  function pickMood(el) {
+    document.querySelectorAll('.mood-card').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    selectedMood = el.getAttribute('data-mood');
+    document.getElementById('errNote').style.display = 'none';
+  }
+
+  /* ============================
+     SYMPTOM TAGS (multi)
+  ============================ */
+  function toggleSymptom(el) {
+    el.classList.toggle('active');
+    const val = el.textContent.trim();
+    if (el.classList.contains('active')) {
+      selectedSymptoms.push(val);
+    } else {
+      selectedSymptoms = selectedSymptoms.filter(v => v !== val);
+    }
+  }
+
+  /* ============================
+     GOAL SELECTION (single)
+  ============================ */
+  function pickGoal(el) {
+    document.querySelectorAll('.goal-btn').forEach(g => g.classList.remove('active'));
+    el.classList.add('active');
+    selectedGoal = el.textContent.trim();
+  }
+
+  /* ============================
+     GENERATE PRESCRIPTION
+  ============================ */
+  async function generateRx() {
+    if (!selectedMood) {
+      document.getElementById('errNote').style.display = 'block';
+      return;
+    }
+
+    const btn = document.getElementById('genBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span>⚗️</span><span>Analyzing Neurochemistry...</span>';
+
+    // Show output panel
+    const output = document.getElementById('rxOutput');
+    output.classList.add('show');
+
+    // Reset body to loading state
+    document.getElementById('rxBody').innerHTML = `
+      <div class="rx-loading">
+        <div class="dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <span>Analyzing your neurochemistry...</span>
+      </div>`;
+
+    // Update meta
+    const rxId  = 'RX-' + Math.random().toString(36).substr(2,8).toUpperCase();
+    const today = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+    document.getElementById('rxMeta').innerHTML =
+      `PRESCRIPTION ID: ${rxId}<br>DATE ISSUED: ${today}<br>MOOD STATE: ${selectedMood.toUpperCase()}<br>POWERED BY AI`;
+
+    // Scroll to output
+    setTimeout(() => {
+      output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 200);
+
+    try {
+      const res = await fetch('/.netlify/functions/rx', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mood:     selectedMood,
+          symptoms: selectedSymptoms,
+          goal:     selectedGoal || 'General wellbeing'
+        })
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      renderRx(data.prescription);
+
+    } catch (err) {
+      console.warn('API unavailable — using fallback', err);
+      renderFallback(selectedMood);
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<span>⚗️</span><span>Generate New Rx</span><span>→</span>';
+  }
+
+  /* ============================
+     RENDER FULL PRESCRIPTION
+  ============================ */
+  function renderRx(raw) {
+    try {
+      // Strip possible markdown fences
+      const clean = raw.replace(/```json|```/g, '').trim();
+      const d     = JSON.parse(clean);
+
+      document.getElementById('rxBody').innerHTML = `
+        <div class="rx-block">
+          <div class="rx-neuro-badge">◎ ${d.neurotransmitter || 'Neurochemical Analysis'}</div>
+          <div class="rx-block-title">Neurochemical Assessment</div>
+          <p class="rx-block-text">${d.analysis}</p>
+        </div>
+
+        <div class="rx-grid">
+          <div class="rx-block">
+            <div class="rx-block-title">Power Foods — Eat These</div>
+            <div class="pill-row">
+              ${(d.powerFoods || []).map(f => `<span class="pill">${f}</span>`).join('')}
+            </div>
+          </div>
+          <div class="rx-block">
+            <div class="rx-block-title">Avoid Right Now</div>
+            <div class="pill-row">
+              ${(d.avoid || []).map(f => `<span class="pill avoid">${f}</span>`).join('')}
+            </div>
+            ${d.avoidReason ? `<p class="rx-block-text" style="margin-top:0.8rem;font-size:0.82rem;">${d.avoidReason}</p>` : ''}
+          </div>
+        </div>
+
+        <div class="rx-block">
+          <div class="rx-block-title">The Biochemical Mechanism</div>
+          <p class="rx-block-text">${d.science}</p>
+        </div>
+
+        <div class="rx-block">
+          <div class="rx-block-title">Quick Rx Recipe</div>
+          <div class="rx-recipe">
+            <div class="rx-recipe-name">✦ ${d.recipe ? d.recipe.name : 'Custom Recipe'}</div>
+            <p class="rx-block-text">${d.recipe ? d.recipe.description : ''}</p>
+          </div>
+        </div>
+
+        ${d.timing ? `
+        <div class="rx-block">
+          <div class="rx-block-title">Optimal Timing</div>
+          <p class="rx-block-text">${d.timing}</p>
+        </div>` : ''}
+
+        <div class="rx-block">
+          <div class="rx-block-title">Prescription Note</div>
+          <div class="rx-note">${d.note}</div>
+        </div>`;
+
+    } catch (e) {
+      // Fallback: render raw text
+      document.getElementById('rxBody').innerHTML = `
+        <div class="rx-block">
+          <div class="rx-block-title">Your Prescription</div>
+          <p class="rx-block-text" style="white-space:pre-wrap;line-height:1.8;">${raw}</p>
+        </div>`;
+    }
+  }
+
+  /* ============================
+     FALLBACK (no API key)
+  ============================ */
+  function renderFallback(mood) {
+    const fallbacks = {
+      'Low / Sad': {
+        analysis:   'Your serotonin levels are likely depleted. Serotonin — the wellbeing neurotransmitter — is synthesized from tryptophan, an essential amino acid found in specific foods. Low serotonin triggers sadness, negative thought loops, and carb cravings as your brain attempts to self-medicate.',
+        neuro:      'Serotonin',
+        foods:      ['Turkey Breast', 'Rolled Oats', 'Dark Chocolate (85%)', 'Fermented Kefir', 'Pumpkin Seeds'],
+        avoid:      ['Alcohol', 'Refined Sugar', 'Ultra-Processed Snacks'],
+        avoidR:     'These compounds deplete serotonin further and disrupt gut microbiome function, which produces 90% of your serotonin.',
+        science:    'Tryptophan from food is the direct precursor to serotonin. Complex carbohydrates trigger insulin release, which clears competing amino acids from the bloodstream, allowing tryptophan to cross the blood-brain barrier more efficiently. This is why low-mood carb cravings are a genuine neurochemical signal — your brain is trying to boost serotonin.',
+        recipe:     { name: 'Tryptophan Power Bowl', desc: 'Warm oats topped with pumpkin seeds, sliced banana, a square of 85% dark chocolate, and a spoonful of kefir. Ready in 5 minutes.' },
+        timing:     'Best consumed in the morning or early afternoon. Tryptophan conversion is most efficient when cortisol is naturally lower.',
+        note:       'Your body is genuinely asking for something specific right now — and it\'s not willpower. What feels like sadness or emptiness often has a very precise nutritional fix. Give these foods three days and observe the difference.'
+      },
+      'Stressed / Anxious': {
+        analysis:   'Your cortisol and adrenaline are elevated. This stress hormone cascade depletes magnesium — your nervous system\'s natural tranquilizer — and inflames neural pathways. Your adrenal glands are working overtime, driving that wired-but-tired feeling.',
+        neuro:      'Cortisol',
+        foods:      ['Wild-Caught Salmon', 'Dark Leafy Greens', 'Blueberries', 'Ashwagandha Tea', 'Pumpkin Seeds'],
+        avoid:      ['Caffeine (reduce)', 'Alcohol', 'White Sugar'],
+        avoidR:     'Caffeine spikes cortisol by up to 30% and depletes magnesium further. Alcohol disrupts GABA signaling and worsens anxiety the next day.',
+        science:    'Omega-3 fatty acids in salmon directly reduce neuroinflammation and cortisol response. Magnesium (in seeds and greens) acts as a natural NMDA receptor antagonist — essentially a biological anti-anxiety compound. Ashwagandha is an adaptogen clinically proven to reduce cortisol by 27.9% in 60 days.',
+        recipe:     { name: 'Anti-Cortisol Salmon Bowl', desc: 'Pan-seared wild salmon over spinach with avocado, pumpkin seeds, and lemon dressing. 15 minutes, maximum cortisol reduction.' },
+        timing:     'Eat within 90 minutes of peak stress. The magnesium and omega-3 begin acting within hours.',
+        note:       'Stress is not a character flaw — it\'s a chemical state. Your body is signaling specific nutrient deficiencies right now. Magnesium alone can shift how your nervous system responds to pressure. Start there.'
+      },
+      'Tired / Brain Fog': {
+        analysis:   'Dopamine depletion combined with blood sugar instability is the most likely culprit. Your mitochondria — the cellular energy factories — need specific micronutrients to produce ATP efficiently. Brain fog is often an inflammation signal, not a laziness signal.',
+        neuro:      'Dopamine & ATP',
+        foods:      ['Eggs (whole)', 'Avocado', 'Green Tea with L-theanine', 'Wild Blueberries', 'Beets'],
+        avoid:      ['Simple Carbs (white bread, pasta)', 'Sugary Drinks', 'Heavy processed meals'],
+        avoidR:     'Simple carbs spike blood glucose then crash it rapidly — creating the exact energy trough you\'re in. They also trigger neuroinflammation, which impairs cognitive processing.',
+        science:    'Eggs provide choline — essential for acetylcholine, the neurotransmitter of learning and memory. Avocado\'s tyrosine fuels dopamine synthesis. L-theanine in green tea increases alpha brain waves (alert-calm state) without cortisol spikes. Beet nitrates cross the blood-brain barrier and improve cerebral blood flow within 2-3 hours.',
+        recipe:     { name: 'Clarity Bowl', desc: 'Two soft-boiled eggs, half an avocado, wild blueberries, and a cup of green tea. No cooking required. Cognition unlocked in 45 minutes.' },
+        timing:     'Eat this immediately. Do not consume caffeine until 90 minutes after waking for optimal adenosine clearance.',
+        note:       'Brain fog is your neurons sending a distress signal. You don\'t need more caffeine — you need specific precursors for neurotransmitter synthesis. These foods work. Trust the biochemistry.'
+      },
+      'Frustrated / Angry': {
+        analysis:   'Excess catecholamines (adrenaline, noradrenaline) combined with neuroinflammation are driving your frustration response. Your amygdala is in overdrive. Anti-inflammatory foods and GABA precursors are the direct biochemical intervention.',
+        neuro:      'Adrenaline / Catecholamines',
+        foods:      ['Tart Cherry Juice', 'Chamomile Tea', 'Walnuts', 'Turmeric with Black Pepper', 'Magnesium-rich Spinach'],
+        avoid:      ['Sugar', 'Alcohol', 'Highly Processed Foods'],
+        avoidR:     'These compounds increase neuroinflammation and amplify the amygdala\'s reactivity to perceived threats, making frustration and anger harder to regulate.',
+        science:    'Tart cherry is one of the highest natural sources of melatonin and anti-inflammatory anthocyanins. Chamomile\'s apigenin binds to GABA-A receptors, producing genuine anxiolytic effects. Turmeric\'s curcumin blocks inflammatory cytokines linked to emotional dysregulation.',
+        recipe:     { name: 'Anti-Rage Reset Smoothie', desc: 'Tart cherry juice, spinach, frozen mango, a pinch of turmeric, and walnuts blended smooth. Drink slowly. Allow the GABA to work.' },
+        timing:     'Immediately. The chamomile binds GABA receptors within 30 minutes. Sip slowly to activate the parasympathetic response.',
+        note:       'Your frustration has a chemical origin. Before you respond to anything, feed the biology. GABA and anti-inflammatory compounds change the neurochemical context — fast.'
+      },
+      'Calm and Balanced': {
+        analysis:   'Your GABA activity appears healthy and your cortisol is regulated. This is the optimal neurochemical state for sustained performance. The goal now is to protect this balance through specific nutrient choices that reinforce serotonin, dopamine, and GABA simultaneously.',
+        neuro:      'GABA',
+        foods:      ['Fermented Vegetables', 'Lentils', 'Sweet Potato', 'Walnuts', 'Kefir'],
+        avoid:      ['Excess Caffeine', 'Ultra-processed foods', 'Late-night alcohol'],
+        avoidR:     'These disrupt the gut-brain axis and can shift your neurochemical balance away from this stable GABA-positive state.',
+        science:    'Fermented foods maintain gut microbiome diversity which directly produces 90% of serotonin. Lentils provide magnesium and folate — both essential for GABA synthesis. Sweet potato\'s complex carbohydrates provide steady glucose for sustained calm energy.',
+        recipe:     { name: 'Balance Maintenance Plate', desc: 'Roasted sweet potato with lentils, fermented sauerkraut on the side, walnuts, and a glass of kefir. Protect this state.' },
+        timing:     'Eat at regular intervals to maintain stable blood glucose and avoid cortisol spikes from hunger.',
+        note:       'You\'re in the sweet spot. This is what nutritional balance feels like. Keep feeding these pathways consistently, and your baseline will start shifting permanently toward this state.'
+      },
+      'Happy / Upbeat': {
+        analysis:   'Dopamine is flowing and serotonin is optimal. Your reward circuitry is active and your prefrontal cortex is engaged. This is the state for peak creativity and connection. The key is sustaining it through foods that extend dopamine availability without triggering a crash.',
+        neuro:      'Dopamine',
+        foods:      ['Dark Chocolate (85%+)', 'Beets', 'Banana', 'Matcha', 'Wild Blueberries'],
+        avoid:      ['Alcohol (crashes dopamine)', 'Junk Food (dopamine spike-crash)', 'Excessive sugar'],
+        avoidR:     'These substances hijack dopamine release artificially, then cause rebound depletion, pulling you out of this natural high-functioning state.',
+        science:    'Dark chocolate contains phenylethylamine (PEA), a natural mood amplifier. Beets contain betaine, which supports dopamine methylation. Matcha provides L-theanine plus a gentle caffeine-catechin complex that extends alertness and mood without anxiety.',
+        recipe:     { name: 'Dopamine Amplifier Bowl', desc: 'Blended banana-date smoothie bowl topped with wild blueberries, beet powder, crushed 85% dark chocolate, and matcha-dusted almonds.' },
+        timing:     'This is perfect for morning or pre-creative work. Your dopamine peaks 2-3 hours after consumption.',
+        note:       'You\'re already in the zone. These foods are designed to extend and deepen this state rather than disrupt it. Protect your energy. Create. This is your peak window.'
+      },
+      'Overwhelmed / Scattered': {
+        analysis:   'Cortisol is spiked and your prefrontal cortex — responsible for executive function and focus — is being suppressed by the stress response. This creates the paradox of needing to focus precisely when your brain\'s focus circuitry is most impaired. Specific omega-3s and adaptogens directly intervene.',
+        neuro:      'Cortisol + Executive Function',
+        foods:      ["Wild Salmon or Sardines", "Lion's Mane Mushroom", "Dark Leafy Greens", "Walnuts", "Phosphatidylserine (eggs, soy)"],
+        avoid:      ['Caffeine overload', 'Simple carbs', 'Skipping meals'],
+        avoidR:     'Additional caffeine further suppresses the prefrontal cortex under high cortisol, making scattered thinking worse. Blood sugar crashes amplify the overwhelm signal.',
+        science:    "Lion's Mane mushroom stimulates Nerve Growth Factor (NGF) and directly supports neural connectivity. Omega-3 DHA from salmon is the primary structural fat of brain cell membranes — low DHA reduces signal transmission between neurons, worsening scattered thinking.",
+        recipe:     { name: 'Clarity & Ground Plate', desc: "Pan-seared salmon with sautéed greens, a side of lion's mane mushroom (available in most health stores) cooked in butter, and walnuts. Neural support in 20 minutes." },
+        timing:     'Eat within 30 minutes of feeling overwhelmed. The protein and fat slow cortisol\'s effect on your thinking. Do not skip this meal.',
+        note:       'Overwhelm is a brain state, not a personal failure. Your prefrontal cortex is being flooded. These foods act as a neurological circuit breaker. Eat first, then decide — in that order.'
+      },
+      'Motivated / Ready to Perform': {
+        analysis:   'Your dopamine and norepinephrine are primed. This is an optimal performance window. The goal is to feed your neurons with the exact precursors and energy substrates they need to sustain peak output — without the crash that derails performance later.',
+        neuro:      'Dopamine + Norepinephrine',
+        foods:      ['Eggs with Yolks', 'Beets or Beet Powder', 'MCT-rich Coconut', 'Wild Blueberries', 'Nitrate Spinach'],
+        avoid:      ['Simple Carbs', 'Heavy processed meals', 'Excessive saturated fat pre-performance'],
+        avoidR:     'These divert blood flow to digestion, impair working memory, and create blood sugar instability during the period where sustained cognitive or physical output is required.',
+        science:    'Whole eggs provide choline for acetylcholine (focus and memory), tyrosine for dopamine, and B-vitamins for energy metabolism. Beet nitrates increase cerebral blood flow 16% within 3 hours. MCTs provide instant ketone-based fuel bypassing glucose metabolism — ideal for sustained cognitive performance.',
+        recipe:     { name: 'Performance Protocol Plate', desc: 'Two fried eggs, roasted beets, half an avocado, a handful of blueberries, and a tablespoon of coconut oil in your morning coffee. The peak state protocol.' },
+        timing:     'Consume 60-90 minutes before your key performance window. This is your pre-game nutrition sequence.',
+        note:       'You\'re in peak state — that\'s rare. Don\'t waste it on the wrong fuel. These foods are engineered by evolution to sustain exactly what you\'re feeling. Protect this window. Perform.'
+      }
+    };
+
+    const f = fallbacks[mood] || fallbacks['Low / Sad'];
+
+    document.getElementById('rxBody').innerHTML = `
+      <div class="rx-block">
+        <div class="badge-inline">◎ ${f.neuro}</div>
+        <div class="rx-block-title">Neurochemical Assessment</div>
+        <p class="rx-block-text">${f.analysis}</p>
+      </div>
+
+      <div class="rx-grid">
+        <div class="rx-block">
+          <div class="rx-block-title">Power Foods — Eat These</div>
+          <div class="pill-row">
+            ${f.foods.map(food => `<span class="pill">${food}</span>`).join('')}
+          </div>
+        </div>
+        <div class="rx-block">
+          <div class="rx-block-title">Avoid Right Now</div>
+          <div class="pill-row">
+            ${f.avoid.map(a => `<span class="pill avoid">${a}</span>`).join('')}
+          </div>
+          <p class="rx-block-text" style="margin-top:0.8rem;font-size:0.82rem;">${f.avoidR}</p>
+        </div>
+      </div>
+
+      <div class="rx-block">
+        <div class="rx-block-title">The Biochemical Mechanism</div>
+        <p class="rx-block-text">${f.science}</p>
+      </div>
+
+      <div class="rx-block">
+        <div class="rx-block-title">Quick Rx Recipe</div>
+        <div class="rx-recipe">
+          <div class="rx-recipe-name">✦ ${f.recipe.name}</div>
+          <p class="rx-block-text">${f.recipe.desc}</p>
+        </div>
+      </div>
+
+      <div class="rx-block">
+        <div class="rx-block-title">Optimal Timing</div>
+        <p class="rx-block-text">${f.timing}</p>
+      </div>
+
+      <div class="rx-block">
+        <div class="rx-block-title">Prescription Note</div>
+        <div class="rx-note">${f.note}</div>
+      </div>
+
+      <p style="font-size:0.72rem;color:var(--text-muted);margin-top:1.5rem;font-family:var(--ff-mono);">
+        ✦ STATIC PRESCRIPTION — Add ANTHROPIC_API_KEY to Netlify environment variables to enable personalized AI-powered Rx
+      </p>`;
+  }
+
+  /* ============================
+     SCROLL REVEAL
+  ============================ */
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        ro.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+  /* ============================
+     NAV SCROLL SHRINK
+  ============================ */
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.padding = window.scrollY > 60 ? '1rem 3rem' : '1.4rem 3rem';
+  }, { passive: true });
+
+</script>
+</body>
+</html>
