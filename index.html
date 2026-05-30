@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoodFuel — Eat for How You Feel</title>
+  <meta name="description" content="Answer 5 quick questions about how you feel. Get a personalised food prescription backed by brain science. Free, instant, and actually useful." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================
+       DESIGN TOKENS
+    ========================================= */
+    :root {
+      --coral:   #FF6B6B;
+      --orange:  #FF9F43;
+      --yellow:  #FECA57;
+      --green:   #1DD1A1;
+      --teal:    #00D2D3;
+      --blue:    #54A0FF;
+      --purple:  #A29BFE;
+      --pink:    #FF78C4;
+      --dark:    #1E1E2E;
+      --body:    #4A4A6A;
+      --muted:   #9B9BB4;
+      --border:  #EBEBF5;
+      --bg:      #F7F7FC;
+      --white:   #FFFFFF;
+      --shadow-sm: 0 2px 12px rgba(0,0,0,0.06);
+      --shadow:    0 8px 32px rgba(0,0,0,0.09);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,0.12);
+      --radius:    18px;
+      --ff-head:   'Playfair Display', Georgia, serif;
+      --ff-body:   'Nunito', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: var(--ff-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* =========================================
+       NAVIGATION
+    ========================================= */
+    nav {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 200;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 1rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ---------- LOGO ---------- */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .logo-mark {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+    }
+
+    .logo-name {
+      font-family: var(--ff-head);
+      font-size: 1.55rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--coral) 0%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--body);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--coral); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--coral), var(--purple));
+      color: white !important;
+      padding: 0.55rem 1.5rem;
+      border-radius: 100px;
+      font-size: 0.85rem !important;
+      font-weight: 800 !important;
+      transition: all 0.25s !important;
+      box-shadow: 0 4px 14px rgba(255,107,107,0.3);
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255,107,107,0.4);
+    }
+
+    /* =========================================
+       HERO
+    ========================================= */
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 6rem;
+      background: linear-gradient(145deg, #FF6B6B 0%, #FF9F43 22%, #FECA57 42%, #1DD1A1 64%, #54A0FF 82%, #A29BFE 100%);
+    }
+
+    /* Animated blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      pointer-events: none;
+      animation: blobFloat ease-in-out infinite;
+    }
+
+    .blob-1 { width: 500px; height: 500px; top: -160px; right: -120px; animation-duration: 9s; }
+    .blob-2 { width: 350px; height: 350px; bottom: -80px; left: -80px; animation-duration: 12s; animation-delay: 2s; }
+    .blob-3 { width: 220px; height: 220px; top: 38%; left: 12%; animation-duration: 7s; animation-delay: 1s; opacity: 0.08; }
+
+    @keyframes blobFloat {
+      0%,100% { transform: scale(1) translateY(0); }
+      50% { transform: scale(1.08) translateY(-18px); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35);
+      color: white;
+      padding: 0.42rem 1.3rem;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero h1 {
+      font-family: var(--ff-head);
+      font-size: clamp(3.8rem, 11vw, 7.5rem);
+      font-weight: 800;
+      line-height: 0.95;
+      color: white;
+      margin-bottom: 1.6rem;
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+
+    .hero h1 em { font-style: italic; }
+
+    .hero p {
+      font-size: 1.18rem;
+      color: rgba(255,255,255,0.92);
+      max-width: 500px;
+      margin: 0 auto 2.8rem;
+      line-height: 1.68;
+      font-weight: 400;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .btn-hero {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: white;
+      color: var(--coral);
+      font-family: var(--ff-body);
+      font-weight: 900;
+      font-size: 1.05rem;
+      padding: 1.05rem 2.8rem;
+      border-radius: 100px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      transition: all 0.3s;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    .btn-hero:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.22); }
+
+    .hero-stats {
+      display: flex;
+      gap: 3.5rem;
+      justify-content: center;
+      margin-top: 4.5rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(255,255,255,0.22);
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s ease 0.4s both;
+    }
+
+    .stat-n { font-family: var(--ff-head); font-size: 2.8rem; font-weight: 800; color: white; line-height: 1; }
+    .stat-l { font-size: 0.72rem; color: rgba(255,255,255,0.7); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; margin-top: 0.2rem; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =========================================
+       SECTIONS
+    ========================================= */
+    section { padding: 6rem 2rem; }
+    .container { max-width: 980px; margin: 0 auto; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--coral);
+      margin-bottom: 0.9rem;
+    }
+
+    .sec-title {
+      font-family: var(--ff-head);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.1rem;
+    }
+
+    .sec-sub {
+      font-size: 1rem;
+      color: var(--body);
+      max-width: 490px;
+      line-height: 1.72;
+    }
+
+    /* =========================================
+       HOW IT WORKS
+    ========================================= */
+    .hiw { background: var(--white); }
+
+    .hiw-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.4rem;
+      margin-top: 3.5rem;
+    }
+
+    .hiw-card {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 2.2rem 1.8rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .hiw-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+
+    .hiw-num {
+      width: 42px; height: 42px;
+      border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 1.1rem;
+      color: white;
+      margin-bottom: 1.4rem;
+    }
+
+    .hiw-card:nth-child(1) .hiw-num { background: linear-gradient(135deg, var(--coral), var(--orange)); }
+    .hiw-card:nth-child(2) .hiw-num { background: linear-gradient(135deg, var(--purple), var(--blue)); }
+    .hiw-card:nth-child(3) .hiw-num { background: linear-gradient(135deg, var(--green), var(--teal)); }
+
+    .hiw-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 0.55rem; }
+    .hiw-text  { font-size: 0.88rem; color: var(--body); line-height: 1.68; }
+
+    /* =========================================
+       QUIZ
+    ========================================= */
+    .quiz-wrap { background: var(--bg); }
+
+    /* Progress */
+    .progress-bar-wrap {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.4rem 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+
+    .progress-title { font-weight: 800; font-size: 0.95rem; }
+    .progress-frac  { font-size: 0.82rem; color: var(--muted); font-weight: 700; }
+
+    .prog-track {
+      height: 9px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--coral), var(--yellow), var(--green), var(--blue), var(--purple));
+      border-radius: 100px;
+      transition: width 0.55s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    /* Step visibility */
+    .quiz-step { display: none; }
+    .quiz-step.active {
+      display: block;
+      animation: stepSlide 0.4s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    @keyframes stepSlide {
+      from { opacity: 0; transform: translateX(18px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Card shell */
+    .q-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem 2rem 1.6rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.2rem;
+    }
+
+    .q-label {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 0.3rem;
+    }
+
+    .q-hint {
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    /* --- MOOD GRID --- */
+    .mood-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
+    }
+
+    .mood-btn {
+      background: var(--bg);
+      border: 2.5px solid transparent;
+      border-radius: 14px;
+      padding: 1.2rem 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      font-family: var(--ff-body);
+      transition: all 0.24s;
+      position: relative;
+    }
+
+    .mood-btn:hover { border-color: var(--purple); transform: translateY(-2px); background: white; box-shadow: var(--shadow-sm); }
+
+    .mood-btn.sel {
+      border-color: var(--purple);
+      background: white;
+      box-shadow: 0 4px 18px rgba(162,155,254,0.28);
+    }
+
+    .mood-btn .m-check {
+      position: absolute;
+      top: 6px; right: 7px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: white;
+      font-size: 0.58rem;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: scale(0.4);
+      transition: all 0.22s;
+    }
+
+    .mood-btn.sel .m-check { opacity: 1; transform: scale(1); }
+
+    .m-emoji { font-size: 2.2rem; display: block; margin-bottom: 0.5rem; }
+    .m-name  { font-size: 0.76rem; font-weight: 800; color: var(--dark); display: block; }
+
+    /* --- OPTION GRID (2-col) --- */
+    .opt-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.7rem;
+    }
+
+    .opt-btn {
+      background: var(--bg);
+      border: 2.5px solid transparent;
+      border-radius: 13px;
+      padding: 0.9rem 1.1rem;
+      cursor: pointer;
+      font-family: var(--ff-body);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-align: left;
+      transition: all 0.22s;
+    }
+
+    .opt-btn:hover { border-color: var(--blue); background: white; }
+    .opt-btn.sel   { border-color: var(--blue); background: white; box-shadow: 0 3px 14px rgba(84,160,255,0.2); }
+
+    .o-em  { font-size: 1.6rem; flex-shrink: 0; }
+    .o-txt { font-size: 0.88rem; font-weight: 800; color: var(--dark); display: block; }
+    .o-sub { font-size: 0.72rem; color: var(--muted); font-weight: 600; display: block; margin-top: 0.1rem; }
+
+    /* --- CHIPS --- */
+    .chip-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+
+    .chip {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      color: var(--body);
+      padding: 0.45rem 1.05rem;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--ff-body);
+      transition: all 0.2s;
+    }
+
+    .chip:hover { border-color: var(--green); color: var(--dark); }
+
+    .chip.sel-green {
+      background: #E8FFF8;
+      border-color: var(--green);
+      color: #059669;
+    }
+
+    /* --- NAV BUTTONS --- */
+    .step-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.4rem;
+      gap: 1rem;
+    }
+
+    .btn-back {
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--ff-body);
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 100px;
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover { border-color: var(--muted); color: var(--dark); }
+
+    .btn-next {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--coral), var(--purple));
+      color: white;
+      font-family: var(--ff-body);
+      font-weight: 900;
+      font-size: 0.95rem;
+      padding: 0.85rem 2.4rem;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(255,107,107,0.28);
+      transition: all 0.28s;
+    }
+
+    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,107,107,0.38); }
+
+    .btn-gen {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: linear-gradient(135deg, var(--coral) 0%, var(--orange) 40%, var(--purple) 100%);
+      color: white;
+      font-family: var(--ff-body);
+      font-weight: 900;
+      font-size: 1.05rem;
+      padding: 1.05rem 3rem;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(255,107,107,0.3);
+      transition: all 0.3s;
+    }
+
+    .btn-gen:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(255,107,107,0.38); }
+    .btn-gen:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+    .err-msg {
+      display: none;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--coral);
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+
+    /* =========================================
+       PRESCRIPTION CARD
+    ========================================= */
+    .rx-output { display: none; margin-top: 2rem; }
+    .rx-output.show { display: block; animation: fadeUp 0.6s ease both; }
+
+    .rx-card {
+      background: white;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Rainbow strip */
+    .rx-stripe {
+      height: 6px;
+      background: linear-gradient(90deg, var(--coral), var(--orange), var(--yellow), var(--green), var(--blue), var(--purple), var(--pink));
+    }
+
+    /* Header */
+    .rx-head {
+      padding: 1.8rem 2.2rem;
+      background: linear-gradient(135deg, #FFF8FF, #FFF4F4);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .rx-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .rx-brand-text strong {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--coral), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .rx-brand-text small {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .rx-tag {
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      padding: 0.28rem 1rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--body);
+    }
+
+    .rx-body { padding: 2rem 2.2rem; }
+
+    /* ---- Rx content pieces ---- */
+    .rx-block { margin-bottom: 1.8rem; padding-bottom: 1.8rem; border-bottom: 1px solid #F4F4F8; }
+    .rx-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .rx-blabel {
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .rx-text {
+      font-size: 0.92rem;
+      color: var(--body);
+      line-height: 1.75;
+    }
+
+    .rx-text strong { color: var(--dark); }
+
+    .neuro-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: linear-gradient(135deg, var(--coral), var(--purple));
+      color: white;
+      padding: 0.32rem 1rem;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.8rem;
+    }
+
+    .food-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+    .chip-eat {
+      background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+      border: 1.5px solid #6EE7B7;
+      color: #059669;
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .chip-avoid {
+      background: #FFF5F5;
+      border: 1.5px solid #FECACA;
+      color: #DC2626;
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .recipe-box {
+      background: linear-gradient(135deg, #FFFBEB, #FFF9E0);
+      border: 1.5px solid #FDE68A;
+      border-left: 4px solid var(--yellow);
+      border-radius: 14px;
+      padding: 1.2rem 1.5rem;
+    }
+
+    .recipe-name { font-weight: 900; font-size: 1.05rem; color: var(--dark); margin-bottom: 0.3rem; }
+
+    .timing-box {
+      background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+      border: 1.5px solid #BFDBFE;
+      border-radius: 12px;
+      padding: 0.9rem 1.3rem;
+      font-size: 0.88rem;
+      color: #1D4ED8;
+      font-weight: 700;
+    }
+
+    .note-box {
+      background: linear-gradient(135deg, #F5F3FF, #EDE9FE);
+      border-radius: 14px;
+      padding: 1.4rem 1.6rem;
+      font-size: 0.92rem;
+      color: #5B21B6;
+      line-height: 1.75;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .rx-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .rx-sub-card {
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 1.3rem;
+    }
+
+    /* Loading dots */
+    .rx-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem;
+      gap: 1rem;
+      color: var(--muted);
+    }
+
+    .dots { display: flex; gap: 8px; }
+    .d {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--coral), var(--purple));
+      animation: dBounce 0.9s ease-in-out infinite;
+    }
+    .d:nth-child(2) { animation-delay: 0.18s; }
+    .d:nth-child(3) { animation-delay: 0.36s; }
+
+    @keyframes dBounce {
+      0%,100% { transform: translateY(0); opacity: 0.4; }
+      50% { transform: translateY(-10px); opacity: 1; }
+    }
+
+    /* =========================================
+       SCIENCE SECTION
+    ========================================= */
+    .science { background: var(--white); }
+
+    .neuro-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.3rem;
+      margin-top: 3.2rem;
+    }
+
+    .neuro-card {
+      border-radius: var(--radius);
+      padding: 2rem;
+      border: 2px solid transparent;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .neuro-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+
+    .nc-1 { background: linear-gradient(135deg, #FFF5F5, #FFECEC); border-color: #FECACA; }
+    .nc-2 { background: linear-gradient(135deg, #FFFBEB, #FFF4CC); border-color: #FDE68A; }
+    .nc-3 { background: linear-gradient(135deg, #ECFDF5, #D1FAE5); border-color: #A7F3D0; }
+    .nc-4 { background: linear-gradient(135deg, #F5F3FF, #EDE9FE); border-color: #C4B5FD; }
+
+    .nc-icon  { font-size: 2.4rem; display: block; margin-bottom: 0.9rem; }
+    .nc-title { font-weight: 900; font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .nc-desc  { font-size: 0.87rem; color: var(--body); line-height: 1.68; margin-bottom: 1.3rem; }
+
+    .food-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .food-tag {
+      background: rgba(255,255,255,0.6);
+      border: 1.5px solid rgba(0,0,0,0.07);
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    /* =========================================
+       TESTIMONIALS
+    ========================================= */
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.3rem;
+      margin-top: 3rem;
+    }
+
+    .proof-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      transition: all 0.3s;
+    }
+
+    .proof-card:hover { border-color: var(--purple); transform: translateY(-4px); box-shadow: var(--shadow); }
+
+    .stars    { font-size: 1rem; color: var(--yellow); margin-bottom: 1rem; letter-spacing: 0.05em; }
+    .proof-q  { font-size: 0.92rem; color: var(--body); line-height: 1.72; font-style: italic; margin-bottom: 1.4rem; }
+    .p-author { display: flex; align-items: center; gap: 0.7rem; }
+    .p-av     { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .p-name   { font-weight: 800; font-size: 0.83rem; }
+    .p-role   { font-size: 0.72rem; color: var(--muted); font-weight: 600; }
+
+    /* =========================================
+       CTA STRIP
+    ========================================= */
+    .cta-strip {
+      background: linear-gradient(145deg, var(--coral) 0%, var(--orange) 25%, var(--purple) 65%, var(--blue) 100%);
+      padding: 6.5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-blob {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      pointer-events: none;
+    }
+
+    .cta-blob-a { width: 400px; height: 400px; top: -150px; right: -100px; }
+    .cta-blob-b { width: 280px; height: 280px; bottom: -80px; left: -60px; }
+
+    .cta-inner { position: relative; z-index: 1; }
+
+    .cta-strip h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(2.3rem, 5vw, 3.6rem);
+      font-weight: 800;
+      color: white;
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+    }
+
+    .cta-strip p {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.88);
+      max-width: 430px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.65;
+    }
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+    footer {
+      background: var(--dark);
+      padding: 2.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .foot-logo { display: flex; align-items: center; gap: 0.6rem; }
+    .foot-logo span { color: white; font-weight: 800; font-size: 1.05rem; font-family: var(--ff-head); }
+    .foot-copy { font-size: 0.75rem; color: rgba(255,255,255,0.38); }
+    .foot-links { display: flex; gap: 1.8rem; list-style: none; }
+    .foot-links a { font-size: 0.75rem; color: rgba(255,255,255,0.38); text-decoration: none; transition: color 0.2s; font-weight: 700; }
+    .foot-links a:hover { color: white; }
+
+    /* =========================================
+       SCROLL REVEAL
+    ========================================= */
+    .rev { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .rev.in { opacity: 1; transform: translateY(0); }
+    .rev.d1 { transition-delay: 0.1s; }
+    .rev.d2 { transition-delay: 0.2s; }
+    .rev.d3 { transition-delay: 0.3s; }
+
+    /* =========================================
+       RESPONSIVE
+    ========================================= */
+    @media (max-width: 860px) {
+      .mood-grid { grid-template-columns: repeat(2, 1fr); }
+      .hiw-grid  { grid-template-columns: 1fr; }
+      .neuro-grid { grid-template-columns: 1fr; }
+      .proof-grid { grid-template-columns: 1fr; }
+      .rx-two-col { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 650px) {
+      nav { padding: 1rem 1.2rem; }
+      .nav-links { display: none; }
+      section { padding: 4.5rem 1.2rem; }
+      .hero { padding: 7rem 1.2rem 5rem; }
+      .hero-stats { gap: 2rem; }
+      .stat-n { font-size: 2.2rem; }
+      .rx-body { padding: 1.5rem; }
+      .rx-head { padding: 1.4rem; }
+      footer { flex-direction: column; text-align: center; padding: 2rem 1.4rem; }
+      .opt-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <a href="#" class="logo">
+    <!-- MOODFUEL LOGO SVG -->
+    <svg class="logo-mark" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#FF6B6B"/>
+          <stop offset="50%"  stop-color="#A29BFE"/>
+          <stop offset="100%" stop-color="#54A0FF"/>
+        </linearGradient>
+        <linearGradient id="lg2" x1="0" y1="0" x2="44" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#FECA57"/>
+          <stop offset="100%" stop-color="#FF9F43"/>
+        </linearGradient>
+      </defs>
+      <!-- Background rounded square -->
+      <rect width="44" height="44" rx="13" fill="url(#lg1)"/>
+      <!-- Bowl body -->
+      <path d="M9 22 Q22 13 35 22" stroke="white" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+      <path d="M10.5 22 L12 30.5 Q22 36.5 32 30.5 L33.5 22" fill="rgba(255,255,255,0.22)" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
+      <!-- Steam wisps -->
+      <path d="M17 19.5 Q18.2 16 17 12.5" stroke="rgba(255,255,255,0.85)" stroke-width="1.9" stroke-linecap="round" fill="none"/>
+      <path d="M22 18.5 Q23.2 15 22 11.5" stroke="rgba(255,255,255,0.85)" stroke-width="1.9" stroke-linecap="round" fill="none"/>
+      <path d="M27 19.5 Q28.2 16 27 12.5" stroke="rgba(255,255,255,0.85)" stroke-width="1.9" stroke-linecap="round" fill="none"/>
+      <!-- Gold heart sparkle top-right -->
+      <circle cx="35.5" cy="9" r="5" fill="url(#lg2)"/>
+      <text x="35.5" y="12" text-anchor="middle" font-size="6.5" fill="white" font-family="sans-serif">♡</text>
+    </svg>
+    <span class="logo-name">moodfuel</span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#quiz">Take the Quiz</a></li>
+    <li><a href="#science">The Science</a></li>
+    <li><a href="#quiz" class="nav-cta">Get My Rx →</a></li>
+  </ul>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">✨ Nutrition that actually makes sense</div>
+
+    <h1>Eat for<br><em>How You Feel.</em></h1>
+
+    <p>
+      Forget calorie counting. Tell us how you feel today, answer 5 quick questions, and get a personalised food prescription — backed by real brain science.
+    </p>
+
+    <a href="#quiz" class="btn-hero">✨ Start My Free Check-in</a>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-n">200+</div>
+        <div class="stat-l">Mood Foods</div>
+      </div>
+      <div>
+        <div class="stat-n">5</div>
+        <div class="stat-l">Quick Questions</div>
+      </div>
+      <div>
+        <div class="stat-n">94%</div>
+        <div class="stat-l">Feel Better</div>
+      </div>
+      <div>
+        <div class="stat-n">Free</div>
+        <div class="stat-l">Always</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="hiw" id="how">
+  <div class="container">
+    <div class="rev">
+      <div class="eyebrow">✦ How it works</div>
+      <h2 class="sec-title">Three simple steps.<br><em>A smarter way to eat.</em></h2>
+      <p class="sec-sub">Most nutrition apps track what you eat. We start with how you <em>feel</em> — because that's the real driver of everything.</p>
+    </div>
+    <div class="hiw-grid">
+      <div class="hiw-card rev d1">
+        <div class="hiw-num">1</div>
+        <div class="hiw-title">Tell us how you feel 🧠</div>
+        <p class="hiw-text">Answer 5 quick questions — mood, sleep, energy, water, and what you want today. Takes under 60 seconds. No account needed, no emails.</p>
+      </div>
+      <div class="hiw-card rev d2">
+        <div class="hiw-num">2</div>
+        <div class="hiw-title">We read your brain chemistry ⚗️</div>
+        <p class="hiw-text">Our AI checks your answers against brain science to figure out exactly which chemicals are off balance — serotonin, dopamine, cortisol, or GABA.</p>
+      </div>
+      <div class="hiw-card rev d3">
+        <div class="hiw-num">3</div>
+        <div class="hiw-title">Get your food prescription 📋</div>
+        <p class="hiw-text">You get a clear list of what to eat, what to avoid, a quick recipe, and the best time to eat it. Personalised to your exact state today.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="quiz-wrap" id="quiz">
+  <div class="container" style="max-width:720px;">
+
+    <!-- Progress bar -->
+    <div class="progress-bar-wrap rev">
+      <div class="progress-top">
+        <span class="progress-title" id="pTitle">Step 1 of 5 — How are you feeling?</span>
+        <span class="progress-frac" id="pFrac">1 / 5</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" id="progFill" style="width:20%;"></div>
+      </div>
+    </div>
+
+    <!-- STEP 1: MOOD -->
+    <div class="quiz-step active" id="s1">
+      <div class="q-card rev">
+        <div class="q-label">How are you feeling right now? 🌤️</div>
+        <div class="q-hint">Pick the one that feels most like you today</div>
+        <div class="mood-grid" id="moodGrid">
+          <button class="mood-btn" data-v="Low / Sad" onclick="pickMood(this)">
+            <div class="m-check">✓</div>
+            <span class="m-emoji">🌧️</span><span class="m-name">Low / Sad</span>
+          </button>
+          <button class="mood-btn" data-v="Stressed / Anxious" onclick="pickMood(this)">
+            <div class="m-check">✓</div>
+            <span class="m-emoji">😰</span><span class="m-name">Stressed</span>
+          </button>
+          <button class="mood-btn" data-v="Tired / Brain Fog" onclick="pickMood(this)">
+            <div class="m-check">✓</div>
+            <span class="m-emoji">😴</span><span class="m-name">Tired / Foggy</span>
+          </button>
+          <button class="mood-btn" data-v="Frustrated / Angry" onclick="pickMood(this)">
+            <div class="m-check">✓</div>
+            <span class="m-emoji">😤</span><span class="m-name">Frustrated</span>
+          </button>
+          <button class="mood-btn" data-v="Calm and Balanced" onclick="pickMood(this)">
+            <div class="m-check">✓</div>
+            <span class="m-emoji">🌿</span><span class="m-name">Calm & Good</span>
+          </button>
+          <button class="mood-btn" data-v="Happy / Upbeat" onclick="pickMood(this)">
+            <div class="m-check">✓</div>
+            <span class="m-emoji">😊</span><span class="m-name">Happy!</span>
+          </button>
+          <button class="mood-btn" data-v="Overwhelmed / Scattered" onclick="pickMood(this)">
+            <div class="m-check">✓</div>
+            <span class="m-emoji">🤯</span><span class="m-name">Overwhelmed</span>
+          </button>
+          <button class="mood-btn" data-v="Motivated / Ready to Perform" onclick="pickMood(this)">
+            <div class="m-check">✓</div>
+            <span class="m-emoji">💪</span><span class="m-name">Motivated!</span>
+          </button>
+        </div>
+      </div>
+      <div class="step-nav"><div></div><button class="btn-next" onclick="next(1)">Next →</button></div>
+      <p class="err-msg" id="e1">Please pick a mood to continue 😊</p>
+    </div>
+
+    <!-- STEP 2: SLEEP + ENERGY -->
+    <div class="quiz-step" id="s2">
+      <div class="q-card rev" style="margin-bottom:1.2rem;">
+        <div class="q-label">How did you sleep last night? 😴</div>
+        <div class="q-hint">Sleep quality directly changes your brain chemicals today</div>
+        <div class="opt-grid" id="sleepGrid">
+          <button class="opt-btn" data-v="Great — 7-9 hours, woke up refreshed" onclick="pickOpt('sleepGrid','sleep',this)">
+            <span class="o-em">😌</span><div><span class="o-txt">Great</span><span class="o-sub">7-9 hours, felt rested</span></div>
+          </button>
+          <button class="opt-btn" data-v="OK — 5-7 hours, a bit groggy" onclick="pickOpt('sleepGrid','sleep',this)">
+            <span class="o-em">😐</span><div><span class="o-txt">OK</span><span class="o-sub">5-7 hours, a bit groggy</span></div>
+          </button>
+          <button class="opt-btn" data-v="Poor — under 5 hours or broken sleep" onclick="pickOpt('sleepGrid','sleep',this)">
+            <span class="o-em">😩</span><div><span class="o-txt">Poor</span><span class="o-sub">Under 5 hours or broken</span></div>
+          </button>
+          <button class="opt-btn" data-v="Barely slept — under 3 hours" onclick="pickOpt('sleepGrid','sleep',this)">
+            <span class="o-em">🥱</span><div><span class="o-txt">Barely slept</span><span class="o-sub">Under 3 hours</span></div>
+          </button>
+        </div>
+      </div>
+      <div class="q-card rev">
+        <div class="q-label">What's your energy like right now? ⚡</div>
+        <div class="q-hint">Be honest — this really shapes your prescription</div>
+        <div class="opt-grid" id="energyGrid">
+          <button class="opt-btn" data-v="High energy, feeling sharp" onclick="pickOpt('energyGrid','energy',this)">
+            <span class="o-em">🔥</span><div><span class="o-txt">High energy</span><span class="o-sub">Sharp and alert</span></div>
+          </button>
+          <button class="opt-btn" data-v="Moderate energy, getting by" onclick="pickOpt('energyGrid','energy',this)">
+            <span class="o-em">😌</span><div><span class="o-txt">Moderate</span><span class="o-sub">Getting by</span></div>
+          </button>
+          <button class="opt-btn" data-v="Low energy, dragging" onclick="pickOpt('energyGrid','energy',this)">
+            <span class="o-em">🐢</span><div><span class="o-txt">Low energy</span><span class="o-sub">Slow and dragging</span></div>
+          </button>
+          <button class="opt-btn" data-v="Crashed completely" onclick="pickOpt('energyGrid','energy',this)">
+            <span class="o-em">💤</span><div><span class="o-txt">Crashed</span><span class="o-sub">Hit a wall completely</span></div>
+          </button>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-back" onclick="back(2)">← Back</button>
+        <button class="btn-next" onclick="next(2)">Next →</button>
+      </div>
+      <p class="err-msg" id="e2">Please answer both questions 😊</p>
+    </div>
+
+    <!-- STEP 3: WATER + LAST MEAL -->
+    <div class="quiz-step" id="s3">
+      <div class="q-card rev" style="margin-bottom:1.2rem;">
+        <div class="q-label">How much water today? 💧</div>
+        <div class="q-hint">Even a little dehydration causes brain fog and low mood</div>
+        <div class="opt-grid" id="waterGrid">
+          <button class="opt-btn" data-v="Well hydrated — 6+ glasses" onclick="pickOpt('waterGrid','water',this)">
+            <span class="o-em">💧</span><div><span class="o-txt">Loads</span><span class="o-sub">6+ glasses, feeling good</span></div>
+          </button>
+          <button class="opt-btn" data-v="Some water — 3-5 glasses" onclick="pickOpt('waterGrid','water',this)">
+            <span class="o-em">🥛</span><div><span class="o-txt">Some</span><span class="o-sub">3-5 glasses</span></div>
+          </button>
+          <button class="opt-btn" data-v="Not much — 1-2 glasses only" onclick="pickOpt('waterGrid','water',this)">
+            <span class="o-em">😬</span><div><span class="o-txt">Not much</span><span class="o-sub">1-2 glasses</span></div>
+          </button>
+          <button class="opt-btn" data-v="Barely any water today" onclick="pickOpt('waterGrid','water',this)">
+            <span class="o-em">🏜️</span><div><span class="o-txt">Barely any</span><span class="o-sub">Mostly coffee or tea</span></div>
+          </button>
+        </div>
+      </div>
+      <div class="q-card rev">
+        <div class="q-label">When did you last eat? 🍽️</div>
+        <div class="q-hint">Blood sugar is a huge part of how you're feeling right now</div>
+        <div class="opt-grid" id="mealGrid">
+          <button class="opt-btn" data-v="Just ate — within the last hour" onclick="pickOpt('mealGrid','meal',this)">
+            <span class="o-em">🍽️</span><div><span class="o-txt">Just now</span><span class="o-sub">Within the last hour</span></div>
+          </button>
+          <button class="opt-btn" data-v="2-3 hours ago" onclick="pickOpt('mealGrid','meal',this)">
+            <span class="o-em">🕐</span><div><span class="o-txt">2-3 hours ago</span><span class="o-sub">Still digesting</span></div>
+          </button>
+          <button class="opt-btn" data-v="4-6 hours ago, getting hungry" onclick="pickOpt('mealGrid','meal',this)">
+            <span class="o-em">😤</span><div><span class="o-txt">4-6 hours ago</span><span class="o-sub">Feeling hungry now</span></div>
+          </button>
+          <button class="opt-btn" data-v="Skipped a meal or very long ago" onclick="pickOpt('mealGrid','meal',this)">
+            <span class="o-em">⚠️</span><div><span class="o-txt">Skipped a meal</span><span class="o-sub">Or can't remember</span></div>
+          </button>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-back" onclick="back(3)">← Back</button>
+        <button class="btn-next" onclick="next(3)">Next →</button>
+      </div>
+      <p class="err-msg" id="e3">Please answer both questions 😊</p>
+    </div>
+
+    <!-- STEP 4: GOAL + DIET -->
+    <div class="quiz-step" id="s4">
+      <div class="q-card rev" style="margin-bottom:1.2rem;">
+        <div class="q-label">What's your main goal right now? 🎯</div>
+        <div class="q-hint">We'll build your whole prescription around this</div>
+        <div class="opt-grid" id="goalGrid">
+          <button class="opt-btn" data-v="Feel better fast" onclick="pickOpt('goalGrid','goal',this)">
+            <span class="o-em">⚡</span><div><span class="o-txt">Feel better fast</span><span class="o-sub">I need a quick lift</span></div>
+          </button>
+          <button class="opt-btn" data-v="Steady energy all day" onclick="pickOpt('goalGrid','goal',this)">
+            <span class="o-em">🔋</span><div><span class="o-txt">Steady energy</span><span class="o-sub">No crashes please</span></div>
+          </button>
+          <button class="opt-btn" data-v="Mental clarity and sharp focus" onclick="pickOpt('goalGrid','goal',this)">
+            <span class="o-em">🧠</span><div><span class="o-txt">Mental clarity</span><span class="o-sub">Focus and think clearly</span></div>
+          </button>
+          <button class="opt-btn" data-v="Calm down and reduce stress" onclick="pickOpt('goalGrid','goal',this)">
+            <span class="o-em">🌿</span><div><span class="o-txt">Reduce stress</span><span class="o-sub">Calm and settle down</span></div>
+          </button>
+          <button class="opt-btn" data-v="Better sleep tonight" onclick="pickOpt('goalGrid','goal',this)">
+            <span class="o-em">🌙</span><div><span class="o-txt">Better sleep</span><span class="o-sub">Set myself up for tonight</span></div>
+          </button>
+          <button class="opt-btn" data-v="Peak performance today" onclick="pickOpt('goalGrid','goal',this)">
+            <span class="o-em">🏆</span><div><span class="o-txt">Peak performance</span><span class="o-sub">I'm going for it today</span></div>
+          </button>
+        </div>
+      </div>
+      <div class="q-card rev">
+        <div class="q-label">Any dietary needs we should know? 🥗</div>
+        <div class="q-hint">So we don't suggest things you can't eat — tick all that apply</div>
+        <div class="chip-row">
+          <button class="chip" onclick="togChip(this,'diet')">No restrictions</button>
+          <button class="chip" onclick="togChip(this,'diet')">Vegetarian</button>
+          <button class="chip" onclick="togChip(this,'diet')">Vegan</button>
+          <button class="chip" onclick="togChip(this,'diet')">Gluten-free</button>
+          <button class="chip" onclick="togChip(this,'diet')">Dairy-free</button>
+          <button class="chip" onclick="togChip(this,'diet')">Nut allergy</button>
+          <button class="chip" onclick="togChip(this,'diet')">Low carb</button>
+          <button class="chip" onclick="togChip(this,'diet')">Halal</button>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-back" onclick="back(4)">← Back</button>
+        <button class="btn-next" onclick="next(4)">Next →</button>
+      </div>
+      <p class="err-msg" id="e4">Please pick a goal to continue 😊</p>
+    </div>
+
+    <!-- STEP 5: SYMPTOMS -->
+    <div class="quiz-step" id="s5">
+      <div class="q-card rev">
+        <div class="q-label">Anything bothering you today? 🤔</div>
+        <div class="q-hint">Pick any that apply — or leave blank and hit generate</div>
+        <div class="chip-row">
+          <button class="chip" onclick="togChip(this,'sym')">🌫️ Brain fog</button>
+          <button class="chip" onclick="togChip(this,'sym')">💥 Energy crash</button>
+          <button class="chip" onclick="togChip(this,'sym')">😵 Headache</button>
+          <button class="chip" onclick="togChip(this,'sym')">🤪 Mood swings</button>
+          <button class="chip" onclick="togChip(this,'sym')">🍬 Sugar cravings</button>
+          <button class="chip" onclick="togChip(this,'sym')">😤 Irritability</button>
+          <button class="chip" onclick="togChip(this,'sym')">😣 Muscle tension</button>
+          <button class="chip" onclick="togChip(this,'sym')">🫃 Bloating</button>
+          <button class="chip" onclick="togChip(this,'sym')">🏃 Racing thoughts</button>
+          <button class="chip" onclick="togChip(this,'sym')">😶 Low motivation</button>
+          <button class="chip" onclick="togChip(this,'sym')">😰 Feeling anxious</button>
+          <button class="chip" onclick="togChip(this,'sym')">🌀 Digestive issues</button>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-back" onclick="back(5)">← Back</button>
+        <button class="btn-gen" id="genBtn" onclick="generateRx()">✨ Get My Food Prescription</button>
+      </div>
+    </div>
+
+    <!-- RX OUTPUT -->
+    <div class="rx-output" id="rxOut">
+      <div class="rx-card">
+        <div class="rx-stripe"></div>
+        <div class="rx-head">
+          <div class="rx-brand">
+            <svg width="36" height="36" viewBox="0 0 44 44" fill="none">
+              <defs>
+                <linearGradient id="lgh" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#FF6B6B"/>
+                  <stop offset="100%" stop-color="#A29BFE"/>
+                </linearGradient>
+              </defs>
+              <rect width="44" height="44" rx="13" fill="url(#lgh)"/>
+              <path d="M9 22 Q22 13 35 22" stroke="white" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+              <path d="M10.5 22 L12 30.5 Q22 36.5 32 30.5 L33.5 22" fill="rgba(255,255,255,0.22)" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
+              <path d="M17 19.5 Q18.2 16 17 12.5" stroke="rgba(255,255,255,0.85)" stroke-width="1.9" stroke-linecap="round" fill="none"/>
+              <path d="M22 18.5 Q23.2 15 22 11.5" stroke="rgba(255,255,255,0.85)" stroke-width="1.9" stroke-linecap="round" fill="none"/>
+              <path d="M27 19.5 Q28.2 16 27 12.5" stroke="rgba(255,255,255,0.85)" stroke-width="1.9" stroke-linecap="round" fill="none"/>
+            </svg>
+            <div class="rx-brand-text">
+              <strong>MoodFuel Prescription</strong>
+              <small id="rxSubLabel">YOUR PERSONALISED FOOD RX</small>
+            </div>
+          </div>
+          <div class="rx-tag" id="rxDate">—</div>
+        </div>
+        <div class="rx-body" id="rxBody">
+          <div class="rx-loading">
+            <div class="dots"><div class="d"></div><div class="d"></div><div class="d"></div></div>
+            <span style="font-size:0.88rem;font-weight:700;color:var(--muted);">Making your prescription...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ SCIENCE ============ -->
+<section class="science" id="science">
+  <div class="container">
+    <div class="rev">
+      <div class="eyebrow">✦ The Science</div>
+      <h2 class="sec-title">Your brain runs on food,<br><em>not willpower.</em></h2>
+      <p class="sec-sub">Every emotion you feel is driven by brain chemicals — and every one of those chemicals is built from the food you eat. Here are the four big ones:</p>
+    </div>
+    <div class="neuro-grid">
+      <div class="neuro-card nc-1 rev d1">
+        <span class="nc-icon">😊</span>
+        <div class="nc-title">Serotonin — the happiness chemical</div>
+        <p class="nc-desc">When it's low you feel sad, flat, or anxious. The surprising bit? 90% of it is made in your gut, not your brain — from something called tryptophan that comes directly from food.</p>
+        <div class="food-row">
+          <span class="food-tag">🦃 Turkey</span><span class="food-tag">🥚 Eggs</span><span class="food-tag">🌾 Oats</span><span class="food-tag">🌱 Seeds</span><span class="food-tag">🍫 Dark Chocolate</span>
+        </div>
+      </div>
+      <div class="neuro-card nc-2 rev d2">
+        <span class="nc-icon">🏆</span>
+        <div class="nc-title">Dopamine — the motivation chemical</div>
+        <p class="nc-desc">Low dopamine = procrastination, zero drive, and reaching for junk food for a quick hit. It's built from an amino acid called tyrosine — found in specific foods. You can genuinely eat your way to more motivation.</p>
+        <div class="food-row">
+          <span class="food-tag">🥑 Avocado</span><span class="food-tag">🍌 Banana</span><span class="food-tag">🥜 Almonds</span><span class="food-tag">🫐 Blueberries</span><span class="food-tag">🍵 Green Tea</span>
+        </div>
+      </div>
+      <div class="neuro-card nc-3 rev d1">
+        <span class="nc-icon">😤</span>
+        <div class="nc-title">Cortisol — the stress hormone</div>
+        <p class="nc-desc">Stress floods your body with cortisol, which drains your magnesium reserves and drives cravings for sugar and fat. Specific foods act as natural brakes — calming the whole system down within hours.</p>
+        <div class="food-row">
+          <span class="food-tag">🐟 Salmon</span><span class="food-tag">🫐 Blueberries</span><span class="food-tag">🥬 Greens</span><span class="food-tag">🌿 Ashwagandha</span><span class="food-tag">🍵 Chamomile</span>
+        </div>
+      </div>
+      <div class="neuro-card nc-4 rev d2">
+        <span class="nc-icon">😌</span>
+        <div class="nc-title">GABA — the calm chemical</div>
+        <p class="nc-desc">GABA is your brain's off switch for anxiety. When it's low you can't switch off — racing thoughts, tension, restlessness. Magnesium and fermented foods directly boost GABA activity.</p>
+        <div class="food-row">
+          <span class="food-tag">🥛 Kefir</span><span class="food-tag">🥬 Spinach</span><span class="food-tag">🍠 Sweet Potato</span><span class="food-tag">🥜 Walnuts</span><span class="food-tag">🫙 Fermented Foods</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROOF ============ -->
+<section id="proof">
+  <div class="container">
+    <div class="rev">
+      <div class="eyebrow">✦ Real People</div>
+      <h2 class="sec-title">What people are saying</h2>
+    </div>
+    <div class="proof-grid">
+      <div class="proof-card rev d1">
+        <div class="stars">★★★★★</div>
+        <p class="proof-q">"I thought I had no willpower. Turns out I just had low serotonin. Three foods later and I felt genuinely different within 48 hours."</p>
+        <div class="p-author">
+          <div class="p-av" style="background:linear-gradient(135deg,#FF6B6B,#FF9F43)">🌿</div>
+          <div><div class="p-name">Sarah K.</div><div class="p-role">Wellness Coach · Austin TX</div></div>
+        </div>
+      </div>
+      <div class="proof-card rev d2">
+        <div class="stars">★★★★★</div>
+        <p class="proof-q">"As a dietitian I was sceptical. The neuroscience here is actually solid. I now recommend MoodFuel to clients stuck in stress-eating patterns."</p>
+        <div class="p-author">
+          <div class="p-av" style="background:linear-gradient(135deg,#A29BFE,#54A0FF)">⚗️</div>
+          <div><div class="p-name">Dr. Marcus R.</div><div class="p-role">Registered Dietitian · NYC</div></div>
+        </div>
+      </div>
+      <div class="proof-card rev d3">
+        <div class="stars">★★★★★</div>
+        <p class="proof-q">"My 3pm energy crashes were killing my productivity. One week of following my MoodFuel prescription and they're completely gone."</p>
+        <div class="p-author">
+          <div class="p-av" style="background:linear-gradient(135deg,#1DD1A1,#54A0FF)">🎯</div>
+          <div><div class="p-name">Jake T.</div><div class="p-role">Startup Founder · San Francisco</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA STRIP ============ -->
+<div class="cta-strip">
+  <div class="cta-blob cta-blob-a"></div>
+  <div class="cta-blob cta-blob-b"></div>
+  <div class="cta-inner">
+    <div class="eyebrow" style="color:rgba(255,255,255,0.7);justify-content:center;display:flex;">✦ Ready?</div>
+    <h2>Stop guessing.<br><em>Start feeling better.</em></h2>
+    <p>Your mood is a message from your brain. It's asking for specific food. Let's figure out what.</p>
+    <a href="#quiz" class="btn-hero">✨ Take the Free Check-in</a>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="foot-logo">
+    <svg width="32" height="32" viewBox="0 0 44 44" fill="none">
+      <defs><linearGradient id="lgf" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#A29BFE"/></linearGradient></defs>
+      <rect width="44" height="44" rx="13" fill="url(#lgf)"/>
+      <path d="M9 22 Q22 13 35 22" stroke="white" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+      <path d="M10.5 22 L12 30.5 Q22 36.5 32 30.5 L33.5 22" fill="rgba(255,255,255,0.22)" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M17 19.5 Q18.2 16 17 12.5" stroke="rgba(255,255,255,0.85)" stroke-width="1.9" stroke-linecap="round" fill="none"/>
+      <path d="M22 18.5 Q23.2 15 22 11.5" stroke="rgba(255,255,255,0.85)" stroke-width="1.9" stroke-linecap="round" fill="none"/>
+      <path d="M27 19.5 Q28.2 16 27 12.5" stroke="rgba(255,255,255,0.85)" stroke-width="1.9" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span>moodfuel</span>
+  </div>
+  <p class="foot-copy">© 2025 MoodFuel · Feed your feelings. Feed your brain.</p>
+  <ul class="foot-links">
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Terms</a></li>
+    <li><a href="#science">Science</a></li>
+    <li><a href="#quiz">Get Rx</a></li>
+  </ul>
+</footer>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+  // ============================
+  // STATE
+  // ============================
+  const S = { mood:null, sleep:null, energy:null, water:null, meal:null, goal:null, diet:[], symptoms:[] };
+
+  const STEP_TITLES = [
+    'Step 1 of 5 — How are you feeling?',
+    'Step 2 of 5 — Sleep & Energy',
+    'Step 3 of 5 — Water & Food',
+    'Step 4 of 5 — Your Goal',
+    'Step 5 of 5 — Any symptoms?',
+  ];
+
+  // ============================
+  // NAVIGATION
+  // ============================
+  function next(from) {
+    if (from === 1 && !S.mood)           { show('e1'); return; }
+    if (from === 2 && (!S.sleep||!S.energy)) { show('e2'); return; }
+    if (from === 3 && (!S.water||!S.meal))   { show('e3'); return; }
+    if (from === 4 && !S.goal)           { show('e4'); return; }
+
+    hide('s' + from);
+    show('s' + (from + 1));
+    updateBar(from + 1);
+    scrollTop();
+  }
+
+  function back(from) {
+    hide('s' + from);
+    show('s' + (from - 1));
+    updateBar(from - 1);
+    scrollTop();
+  }
+
+  function scrollTop() {
+    document.getElementById('quiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function updateBar(step) {
+    document.getElementById('progFill').style.width = (step / 5 * 100) + '%';
+    document.getElementById('pTitle').textContent = STEP_TITLES[step - 1];
+    document.getElementById('pFrac').textContent = step + ' / 5';
+  }
+
+  function show(id) { document.getElementById(id).style.display = ''; document.getElementById(id).classList.add('active'); }
+  function hide(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('active');
+    setTimeout(() => { if (!el.classList.contains('active')) el.style.display = 'none'; }, 400);
+  }
+
+  // ============================
+  // PICKERS
+  // ============================
+  function pickMood(el) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('sel'));
+    el.classList.add('sel');
+    S.mood = el.getAttribute('data-v');
+    document.getElementById('e1').style.display = 'none';
+  }
+
+  function pickOpt(gridId, key, el) {
+    document.querySelectorAll('#' + gridId + ' .opt-btn').forEach(b => b.classList.remove('sel'));
+    el.classList.add('sel');
+    S[key] = el.getAttribute('data-v');
+    if (key === 'sleep' || key === 'energy') document.getElementById('e2').style.display = 'none';
+    if (key === 'water' || key === 'meal')   document.getElementById('e3').style.display = 'none';
+    if (key === 'goal')                       document.getElementById('e4').style.display = 'none';
+  }
+
+  function togChip(el, type) {
+    el.classList.toggle('sel-green');
+    const arr = type === 'diet' ? S.diet : S.symptoms;
+    const v = el.textContent.trim();
+    if (el.classList.contains('sel-green')) { arr.push(v); } else { const i = arr.indexOf(v); if (i > -1) arr.splice(i, 1); }
+  }
+
+  // ============================
+  // GENERATE RX
+  // ============================
+  async function generateRx() {
+    const btn = document.getElementById('genBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Making your prescription...';
+
+    const out = document.getElementById('rxOut');
+    out.classList.add('show');
+    document.getElementById('rxSubLabel').textContent = 'MOOD: ' + S.mood.toUpperCase();
+    document.getElementById('rxDate').textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    document.getElementById('rxBody').innerHTML = `<div class="rx-loading"><div class="dots"><div class="d"></div><div class="d"></div><div class="d"></div></div><span style="font-size:0.88rem;font-weight:700;color:var(--muted);">Reading your answers...</span></div>`;
+
+    setTimeout(() => out.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+
+    try {
+      const res = await fetch('/.netlify/functions/rx', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(S)
+      });
+      if (!res.ok) throw new Error('err');
+      const data = await res.json();
+      renderRx(data.prescription);
+    } catch(e) {
+      renderFallback(S.mood);
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '✨ Get a New Prescription';
+  }
+
+  // ============================
+  // RENDER AI RESPONSE
+  // ============================
+  function renderRx(raw) {
+    try {
+      const d = JSON.parse(raw.replace(/```json|```/g,'').trim());
+      document.getElementById('rxBody').innerHTML = `
+        <div class="rx-block">
+          <div class="rx-blabel">🧬 What's happening in your brain</div>
+          <span class="neuro-pill">◉ ${d.neurotransmitter || 'Brain Chemistry'}</span>
+          <p class="rx-text">${d.analysis}</p>
+        </div>
+        <div class="rx-two-col">
+          <div class="rx-sub-card">
+            <div class="rx-blabel" style="margin-bottom:0.65rem;">✅ Eat these today</div>
+            <div class="food-chips">${(d.powerFoods||[]).map(f=>`<span class="chip-eat">${f}</span>`).join('')}</div>
+          </div>
+          <div class="rx-sub-card">
+            <div class="rx-blabel" style="margin-bottom:0.65rem;">🚫 Avoid these now</div>
+            <div class="food-chips">${(d.avoid||[]).map(f=>`<span class="chip-avoid">${f}</span>`).join('')}</div>
+            ${d.avoidReason?`<p class="rx-text" style="margin-top:0.7rem;font-size:0.8rem;">${d.avoidReason}</p>`:''}
+          </div>
+        </div>
+        <div class="rx-block">
+          <div class="rx-blabel">🔬 Why this actually works</div>
+          <p class="rx-text">${d.science}</p>
+        </div>
+        <div class="rx-block">
+          <div class="rx-blabel">🍽️ Quick recipe</div>
+          <div class="recipe-box">
+            <div class="recipe-name">✦ ${d.recipe?.name||'Your Recipe'}</div>
+            <p class="rx-text">${d.recipe?.description||''}</p>
+          </div>
+        </div>
+        ${d.timing?`<div class="rx-block"><div class="rx-blabel">⏰ Best time to eat this</div><div class="timing-box">🕐 ${d.timing}</div></div>`:''}
+        <div class="rx-block">
+          <div class="rx-blabel">💊 Your prescription note</div>
+          <div class="note-box">${d.note}</div>
+        </div>`;
+    } catch(e) {
+      document.getElementById('rxBody').innerHTML = `<div class="rx-block"><p class="rx-text" style="white-space:pre-wrap;">${raw}</p></div>`;
+    }
+  }
+
+  // ============================
+  // FALLBACK PRESCRIPTIONS
+  // ============================
+  const FB = {
+    'Low / Sad': { n:'Serotonin', a:"Your serotonin is running low — the brain chemical that makes you feel okay about life. The good news? It's made from tryptophan, an ingredient found in specific foods. You can genuinely eat your way out of this.", f:['🦃 Turkey or chicken','🥚 Whole eggs','🌾 Rolled oats','🍫 Dark chocolate 85%+','🥛 Plain kefir','🌱 Pumpkin seeds'], av:['🍷 Alcohol','🍬 Refined sugar','☕ Extra caffeine'], avR:"These all crash serotonin levels and disrupt the gut — where 90% of serotonin is made.", sc:"Tryptophan from food is the raw ingredient your brain uses to make serotonin. Pairing it with oats helps it get into the brain more easily. This is why carb cravings when you're sad are actually your brain asking for a delivery system.", r:{n:'Happy Bowl',d:'Warm oats with pumpkin seeds, a square of 85% dark chocolate, sliced banana, and a big spoon of kefir. Ready in 5 minutes.'}, t:'Morning or early afternoon. Tryptophan converts most efficiently earlier in the day.', no:"What you're feeling has a real chemical cause — and a real fix. You're not weak. You're just low on tryptophan. Give these foods three days and notice the difference." },
+    'Stressed / Anxious': { n:'Cortisol', a:"Stress has spiked your cortisol — your body's alarm hormone. This drains your magnesium (your natural tranquiliser) and creates cravings for sugar and fat. Your nervous system is running hot right now.", f:['🐟 Wild salmon','🥬 Dark leafy greens','🫐 Blueberries','🌿 Ashwagandha tea','🌱 Pumpkin seeds','🍵 Chamomile tea'], av:['☕ Coffee (for now)','🍷 Alcohol','🍬 Sugar'], avR:"Caffeine raises cortisol by up to 30%. Alcohol worsens anxiety the next day. Sugar spikes then crashes blood sugar, making anxiety worse.", sc:"Omega-3 in salmon directly reduces neuroinflammation and calms your cortisol response. Magnesium from seeds is literally a natural anti-anxiety mineral. Chamomile binds to the same receptors as anti-anxiety medication — gently and naturally.", r:{n:'Calm Down Plate',d:'Pan-fried salmon with wilted spinach and pumpkin seeds. Plus a big mug of chamomile tea. Cortisol starts dropping within an hour.'}, t:'Eat within 90 minutes. Have chamomile tea right now — it works in 30 minutes.', no:"Stress isn't a character flaw — it's a chemical state. And chemical states respond to food. The magnesium alone can genuinely shift how your nervous system feels within hours. Start with the tea." },
+    'Tired / Brain Fog': { n:'Dopamine & Brain Fuel', a:"You're dealing with dopamine depletion and unstable blood sugar — the two biggest drivers of brain fog. Your neurons are running on fumes and need specific fuel to fire properly.", f:['🥚 Whole eggs','🥑 Avocado','🍵 Green tea','🫐 Wild blueberries','🫛 Beets','🥜 Almonds'], av:['🍞 White bread','🥤 Sugary drinks','🍕 Heavy processed food'], avR:"Simple carbs spike then crash your blood sugar — creating the exact foggy, tired feeling you're trying to fix.", sc:"Eggs contain choline for memory and focus. Avocado gives tyrosine, converted directly into dopamine. Beets increase blood flow to the brain by 16% within 3 hours.", r:{n:'Clarity Plate',d:'Two soft-boiled eggs with half an avocado, blueberries, and almonds. A green tea instead of coffee. Brain fog clears within 45-60 minutes.'}, t:"Eat this now. Skip the caffeine — it makes fog worse once it wears off.", no:"Brain fog is a signal, not a flaw. Your neurons are asking for specific fuel. These foods aren't just healthy — they're targeted brain nutrition." },
+    'Frustrated / Angry': { n:'Adrenaline', a:"Excess adrenaline is flooding your system and your brain's alarm circuit is running hot. Anti-inflammatory foods and GABA-boosting nutrients are your direct antidote.", f:['🍒 Tart cherry juice','🍵 Chamomile tea','🥜 Walnuts','🌿 Turmeric','🥬 Spinach','🫐 Blueberries'], av:['🍬 Sugar','🍷 Alcohol','🧂 Processed foods'], avR:"These increase neuroinflammation and make frustration physically harder to regulate.", sc:"Chamomile's active ingredient binds to the same receptors as anti-anxiety medication. Turmeric blocks inflammatory compounds directly linked to anger and emotional dysregulation.", r:{n:'Reset Smoothie',d:'Tart cherry juice, spinach, frozen mango, a pinch of turmeric, walnuts blended together. Sip slowly. GABA response begins within 30 minutes.'}, t:'Drink chamomile tea immediately. Then make the smoothie. Eat before making any decisions.', no:"Before you respond to anything — eat first. Your frustration has a chemical origin and these foods are the antidote." },
+    'Calm and Balanced': { n:'GABA (Optimal)', a:"You're in a great neurochemical state — GABA is working well and cortisol is regulated. The goal now is to sustain this balance, not disrupt it.", f:['🫙 Fermented vegetables','🫘 Lentils','🍠 Sweet potato','🥜 Walnuts','🫐 Berries','🥬 Dark greens'], av:['☕ Too much caffeine','🍬 Processed sugar','🍷 Alcohol before bed'], avR:"These disrupt your gut microbiome and can knock you out of this balanced state.", sc:"Fermented foods maintain gut diversity, which produces serotonin. Lentils provide magnesium for GABA synthesis. Sweet potato gives steady energy without blood sugar spikes.", r:{n:'Balance Plate',d:'Roasted sweet potato with lentils, fermented sauerkraut on the side, walnuts, and berries for dessert.'}, t:'Eat at regular intervals to keep blood sugar stable. Hunger spikes cortisol.', no:"You're in the sweet spot. Keep feeding these pathways and your baseline will sit here more and more often." },
+    'Happy / Upbeat': { n:'Dopamine (High)', a:"Dopamine is flowing and you're in a peak state. The goal is to extend this without triggering a crash — choose foods that sustain the chemistry naturally.", f:['🍫 Dark chocolate 85%+','🫛 Beets','🍌 Banana','🍵 Matcha','🫐 Blueberries','🥥 Coconut water'], av:['🍷 Alcohol','🍕 Junk food','🍬 Excess sugar'], avR:"These hijack dopamine then cause a rebound crash, pulling you out of this natural high-function state.", sc:"Dark chocolate contains phenylethylamine (PEA) — a natural mood amplifier. Matcha gives L-theanine plus gentle caffeine that extends happy alertness without anxiety.", r:{n:'Joy Amplifier Bowl',d:'Banana smoothie bowl topped with blueberries, crushed 85% dark chocolate, and matcha-dusted almonds.'}, t:'Perfect for right now and before creative or social activity.', no:"You're in the zone. Protect it with the right fuel. Go create something today." },
+    'Overwhelmed / Scattered': { n:'Cortisol + Focus', a:"Cortisol is suppressing the part of your brain responsible for focus and calm decision-making. This is why you need to think clearly precisely when it's hardest.", f:['🐟 Wild salmon','🍄 Lion\'s Mane mushroom','🥬 Leafy greens','🥜 Walnuts','🥚 Whole eggs'], av:['☕ Extra caffeine','🍞 Simple carbs','⏭️ Skipping meals'], avR:"More caffeine under high cortisol actually makes scatteredness worse. Skipping meals amplifies the overwhelm through blood sugar drops.", sc:"Lion's Mane mushroom stimulates Nerve Growth Factor and supports neural connectivity. Omega-3 DHA from salmon is the main structural fat of brain cell membranes — without it, signals slow down.", r:{n:'Ground & Focus Plate',d:"Salmon with sautéed greens and lion's mane mushroom in butter. Walnuts on the side. Eat it slowly. Neural support in 20 minutes."}, t:'Eat within 30 minutes. Do not skip this meal.', no:"Overwhelm isn't about being disorganised — it's a brain state caused by cortisol. Eat first, then decide. In that order." },
+    'Motivated / Ready to Perform': { n:'Dopamine + Norepinephrine', a:"You're in a peak performance window — dopamine and norepinephrine are primed. Feed this state properly so you don't crash mid-session.", f:['🥚 Whole eggs','🫛 Beets','🫐 Blueberries','🥬 Spinach','🥥 Coconut oil (in coffee)','🍵 Green tea'], av:['🍞 Simple carbs','🍕 Heavy meals','🥤 Sugary drinks'], avR:"These cause blood sugar instability and divert energy to digestion during the exact window you need peak output.", sc:"Eggs provide choline for focus and tyrosine for dopamine. Beets improve brain blood flow by 16%. MCT oils provide instant fuel that bypasses glucose metabolism.", r:{n:'Performance Protocol',d:'Two fried eggs, roasted beets, avocado, blueberries. Coconut oil in your coffee. The peak state breakfast.'}, t:'Eat 60-90 minutes before your key performance window.', no:"You're in peak state — don't waste it on the wrong fuel. Use the window." }
+  };
+
+  function renderFallback(mood) {
+    const f = FB[mood] || FB['Tired / Brain Fog'];
+    document.getElementById('rxBody').innerHTML = `
+      <div class="rx-block">
+        <div class="rx-blabel">🧬 What's happening in your brain</div>
+        <span class="neuro-pill">◉ ${f.n}</span>
+        <p class="rx-text">${f.a}</p>
+      </div>
+      <div class="rx-two-col">
+        <div class="rx-sub-card">
+          <div class="rx-blabel" style="margin-bottom:0.65rem;">✅ Eat these today</div>
+          <div class="food-chips">${f.f.map(x=>`<span class="chip-eat">${x}</span>`).join('')}</div>
+        </div>
+        <div class="rx-sub-card">
+          <div class="rx-blabel" style="margin-bottom:0.65rem;">🚫 Avoid these now</div>
+          <div class="food-chips">${f.av.map(x=>`<span class="chip-avoid">${x}</span>`).join('')}</div>
+          <p class="rx-text" style="margin-top:0.7rem;font-size:0.8rem;">${f.avR}</p>
+        </div>
+      </div>
+      <div class="rx-block">
+        <div class="rx-blabel">🔬 Why this actually works</div>
+        <p class="rx-text">${f.sc}</p>
+      </div>
+      <div class="rx-block">
+        <div class="rx-blabel">🍽️ Quick recipe</div>
+        <div class="recipe-box">
+          <div class="recipe-name">✦ ${f.r.n}</div>
+          <p class="rx-text">${f.r.d}</p>
+        </div>
+      </div>
+      <div class="rx-block">
+        <div class="rx-blabel">⏰ Best time to eat this</div>
+        <div class="timing-box">🕐 ${f.t}</div>
+      </div>
+      <div class="rx-block">
+        <div class="rx-blabel">💊 Your prescription note</div>
+        <div class="note-box">${f.no}</div>
+      </div>
+      <p style="font-size:0.7rem;color:var(--muted);margin-top:0.5rem;text-align:center;font-weight:600;">
+        Add ANTHROPIC_API_KEY to Netlify environment variables to unlock personalised AI prescriptions
+      </p>`;
+  }
+
+  // ============================
+  // SCROLL REVEAL
+  // ============================
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.rev').forEach(el => obs.observe(el));
+
+  // ============================
+  // INIT HIDDEN STEPS
+  // ============================
+  ['s2','s3','s4','s5'].forEach(id => document.getElementById(id).style.display = 'none');
+</script>
+</body>
+</html>
